@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"eslint.workingDirectories": [
+			"server",
+			"web"
+	],
+	}
+}

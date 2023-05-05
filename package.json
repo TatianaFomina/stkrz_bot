@@ -1,0 +1,24 @@
+{
+  "name": "stkrz_bot",
+  "version": "0.0.0",
+  "main": "index.js",
+  "author": "Tatiana Fomina",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "ts-node --esm ./index.ts",
+    "prod": "tsc && node build/index.js"
+  },
+  "devDependencies": {
+    "@types/node-telegram-bot-api": "^0.61.6",
+    "eslint": "^8.39.0",
+    "eslint-config-codex": "^1.7.2",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "node-telegram-bot-api": "^0.61.0"
+  }
+}
