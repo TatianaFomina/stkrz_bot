@@ -18,7 +18,11 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@fastify/cors": "^8.2.1",
+    "@fastify/multipart": "^7.6.0",
+    "@fastify/static": "^6.10.1",
     "dotenv": "^16.0.3",
+    "fastify": "^4.17.0",
     "node-telegram-bot-api": "^0.61.0"
   }
 }

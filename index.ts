@@ -1,28 +1,13 @@
-import TelegramBot from 'node-telegram-bot-api';
+import { init as initBot } from './src/bot.js';
+import { init as initServer } from './src/server.js';
+import { EventEmitter } from 'node:events';
 import * as dotenv from 'dotenv';
+
 dotenv.config();
 
-const token = process.env.TG_API_TOKEN || '';
-const webAppUrl = process.env.WEB_APP_URL || '';
+const commonEventBus = new EventEmitter();
 
-// Create a bot that uses 'polling' to fetch new updates
-const bot = new TelegramBot(token, { polling: true });
+initBot(commonEventBus);
+initServer(commonEventBus);
 
-// Matches "/start"
-bot.onText(/\/start/, (msg) => {
-  const chatId = msg.chat.id;
 
-  // send back the button to open web app
-  bot.sendMessage(chatId, 'Tap button below', {
-    reply_markup: {
-      inline_keyboard: [
-        [ {
-          text: 'Open',
-          web_app: {
-            url: webAppUrl,
-          },
-        } ],
-      ],
-    },
-  });
-});

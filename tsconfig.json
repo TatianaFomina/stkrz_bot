@@ -10,11 +10,8 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "skipLibCheck": true,
-    "lib": ["esnext", "dom", "dom.Iterable"],
+    "lib": ["esnext"],
     "baseUrl": ".",
     "outDir": "server/build",
   },
-  "exclude": [
-    "node_modules"
-  ]
 }
