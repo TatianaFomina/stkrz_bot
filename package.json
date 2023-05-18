@@ -23,6 +23,7 @@
     "@fastify/static": "^6.10.1",
     "dotenv": "^16.0.3",
     "fastify": "^4.17.0",
+    "nanoid": "^4.0.2",
     "node-telegram-bot-api": "^0.61.0"
   }
 }
