@@ -1,0 +1,99 @@
+<template>
+  <div class="font-selector">
+    <button
+      v-for="font in fonts"
+      :key="font.name"
+      :class="[
+        'font-selector__item',
+        modelValue === font.name && 'font-selector__item--active'
+      ]"
+      @click="onSelect(font.name)"
+    >
+      <img
+        :src="font.image"
+        class="font-selector__item-image"
+      >
+    </button>
+  </div>
+</template>
+
+<script lang='ts' setup>
+import { Font } from '../services/useFonts';
+
+defineProps<{
+  modelValue: Font;
+}>();
+
+const emit = defineEmits<{(eventName: 'update:modelValue', value: Font): void }>();
+
+const fonts = [
+  { name: Font.Test, image: 'src/assets/font-previews/Test.png' },
+  { name: Font.Rocher, image: new URL('../assets/font-previews/Rocher.png', import.meta.url).href },
+
+];
+
+function onSelect(fontName: Font): void {
+  emit('update:modelValue', fontName);
+}
+</script>
+
+<style lang="postcss">
+.font-selector {
+  background-color: var(--color-background-secondary);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  overflow: auto;
+  scrollbar-width: none;
+
+  /** Hide scrollbar */
+  &::-webkit-scrollbar{
+    display: none;
+    -webkit-appearance: none;
+    scrollbar-width: none;
+  }
+
+  &__item {
+    background-color: var(--color-background);
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    outline: none;
+    flex-shrink: 0;
+    padding: 10px;
+
+    &:not(:first-child) {
+      margin-left: 10px;
+    }
+
+    &--active {
+      border: 2px solid var(--color-accent);
+
+      .font-selector__item-image {
+        animation: 250ms scale;
+      }
+    }
+  }
+
+  &__item-image {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@keyframes scale {
+  0% {
+    transform: scale(1, 1);
+  }
+
+  60% {
+    transform: scale(1.2, 1.2);
+
+  }
+
+  100% {
+    transform: scale(1, 1);
+  }
+}
+</style>

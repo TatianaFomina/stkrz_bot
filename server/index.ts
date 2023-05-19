@@ -8,5 +8,3 @@ const bot = new Bot();
 const server = new Server(bot);
 
 server.start();
-
-

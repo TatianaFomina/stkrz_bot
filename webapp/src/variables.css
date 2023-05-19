@@ -1,0 +1,9 @@
+
+:root {
+  --color-background: var(--tg-theme-bg-color);
+  --color-background-secondary: var(--tg-theme-secondary-bg-color, grey);
+  --color-text: var(--tg-theme-text-color, white);
+  --color-text-secondary: var(--tg-theme-hint-color, grey);
+  --color-accent: var(--tg-theme-button-color, blue);
+  --color-link: var(--tg-theme-link-color, rgb(67, 123, 208));
+}

@@ -6,4 +6,7 @@ module.exports = {
     '@typescript-eslint/naming-convention': 'off',
     '@typescript-eslint/no-magic-numbers': 'off',
   },
+  parserOptions: {
+    tsconfigRootDir: __dirname,
+  },
 };
