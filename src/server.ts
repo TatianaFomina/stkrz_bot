@@ -1,83 +1,100 @@
-import fastify from 'fastify';
 import cors from '@fastify/cors';
 import multipart from '@fastify/multipart';
 import staticPlugin from '@fastify/static';
-import { EventEmitter } from 'node:events';
-import { pipeline } from 'stream/promises';
-import fs from 'fs';
 import path from 'path';
+import fastify from 'fastify';
+import { FastifyRequest } from 'fastify/types/request';
+import { FastifyReply } from 'fastify';
+import { MessengerBot } from './types/messenger-bot';
+
 
 /**
- * Initializes http server
- *
- * @param eventBus - common event bus used to transfer messages
+ * HTTP server
  */
-export async function init(eventBus: EventEmitter): Promise<void> {
-  const PORT = 3000;
-  const publicDir = 'public';
-  const publicAbsolutePath = path.join(path.resolve(), publicDir);
-  const server = fastify();
+export class Server {
+  /** Port server listens to */
+  private PORT = 3000;
 
-  await server.register(cors, {});
-  await server.register(multipart, { attachFieldsToBody: true });
-  await server.register(staticPlugin, {
-    root: publicAbsolutePath,
-    prefix: `/${publicDir}/`,
-  });
+  /** Fastify instance */
+  private readonly fastify;
 
-  server.post('/image', async (request, response) => {
-    const parts = request.parts();
-    let queryId = '';
-    let userId = -1;
-    let filePath = '';
+  /**
+   * Constructs server instance
+   *
+   * @param bot - messenger bot instance
+   */
+  constructor(private bot: MessengerBot) {
+    this.fastify = this.createServer();
 
-    /**
-     * Handle form data
-     */
-    for await (const data of parts) {
-      if (data.type === 'file') {
-        const filename = data.filename + '.png';
-        const absolutePath = path.join(publicAbsolutePath, filename);
+    this.attachHandlers();
+  }
 
-        filePath = path.join(publicDir, filename);
-
-        await pipeline(data.file, fs.createWriteStream(absolutePath));
-      } else if (data.fieldname === 'queryId') {
-        queryId = data.value as string;
-      } else if (data.fieldname === 'userId') {
-        userId = parseInt(data.value as string);
+  /**
+   * Starts the server
+   */
+  public start(): void {
+    this.fastify.listen({ port: this.PORT }, (error, address) => {
+      if (error) {
+        console.error(error);
+        process.exit(1);
       }
-    }
 
-    eventBus.emit('image-received', {
-      path: filePath,
-      queryId: queryId,
-      userId: userId,
+      console.log(`Server listening at ${address}`);
+    });
+  }
+
+  /**
+   * Creates the server and registers plugins
+   */
+  private createServer(): ReturnType<typeof fastify> {
+    const publicDir = 'public';
+    const publicAbsolutePath = path.join(path.resolve(), publicDir);
+    const server = fastify();
+
+    server.register(cors, {});
+    server.register(multipart, { attachFieldsToBody: true });
+    server.register(staticPlugin, {
+      root: publicAbsolutePath,
+      prefix: `/${publicDir}/`,
     });
 
-    response.send();
-  });
+    return server;
+  }
 
-  server.post('/create-stickerset', async (request: any, response) => {
-    const image = await request.body.image.toBuffer();
+  /**
+   * Attaches request handlers
+   */
+  private attachHandlers(): void {
+    this.fastify.post('/create-stickerset', this.createStickerset);
+  }
 
+  /**
+   * Handles request to create new stickerset
+   *
+   * @param request - request data
+   * @param reply - reply object
+   */
+  private createStickerset = async (request: FastifyRequest, reply: FastifyReply): Promise<void> =>  {
+    try {
+      const body: any = request.body; // @todo remove any
+      const pngSticker = await body.image.toBuffer();
 
-    eventBus.emit('create-stickerset', {
-      image,
-      userId: request.body.userId.value,
-      name: request.body.name.value,
-      title: request.body.title.value,
-      emojis: request.body.emojis.value,
-    });
-  });
+      const params = {
+        pngSticker,
+        emojis: body.emojis.value,
+        userId: body.userId.value,
+        queryId: body.queryId.value,
+        name: body.name.value,
+        title: body.title.value,
+      };
 
+      await this.bot.createStickerset(params);
 
-  server.listen({ port: PORT }, (error, address) => {
-    if (error) {
-      console.error(error);
-      process.exit(1);
+      reply.code(200).send();
+    } catch (e) {
+      console.error((e as Error).message);
+
+      reply.code(500).send((e as Error).message);
     }
-
-    console.log(`Server listening at ${address}`);
-  });
+  };
 }

@@ -1,13 +1,12 @@
-import { init as initBot } from './src/bot.js';
-import { init as initServer } from './src/server.js';
-import { EventEmitter } from 'node:events';
+import { Bot } from './src/bot.js';
+import { Server } from './src/server.js';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-const commonEventBus = new EventEmitter();
+const bot = new Bot();
+const server = new Server(bot);
 
-initBot(commonEventBus);
-initServer(commonEventBus);
+server.start();
 
 

@@ -1,76 +1,68 @@
 import TelegramBot from 'node-telegram-bot-api';
-import { EventEmitter } from 'node:events';
 import { nanoid } from 'nanoid';
-
-let chatIdGlobal = -1;
+import { MessengerBot, StickersetParams } from './types/messenger-bot';
 
 /**
- * Initializes telegram bot
- *
- * @param eventBus - common event bus used to transfer messages
+ * Telegram messenger bot
  */
-export function init(eventBus: EventEmitter): void {
-  const token = process.env.TG_API_TOKEN || '';
-  const webAppUrl = process.env.WEB_APP_URL || '';
+export class Bot implements MessengerBot {
+  private readonly telegramBot: TelegramBot;
 
-  /* Create a bot that uses 'polling' to fetch new updates */
-  const bot = new TelegramBot(token, { polling: true });
+  /**
+   * Constructs the instance
+   */
+  constructor() {
+    const token = process.env.TG_API_TOKEN || '';
+    const webAppUrl = process.env.WEB_APP_URL || '';
 
-  /* Matches "/start" */
-  bot.onText(/\/start/, (msg) => {
-    const chatId = msg.chat.id;
 
-    chatIdGlobal = chatId;
+    /* Create a bot that uses 'polling' to fetch new updates */
+    this.telegramBot = new TelegramBot(token, { polling: true });
 
-    /* Send back the button to open web app */
-    bot.sendMessage(chatId, 'Tap button below', {
-      reply_markup: {
-        inline_keyboard: [
-          [ {
-            text: 'Open',
-            web_app: {
-              url: webAppUrl,
-            },
-          } ],
-        ],
-      },
+    /* Handle "/start" message */
+    this.telegramBot.onText(/\/start/, (msg) => {
+      const chatId = msg.chat.id;
+
+      /* Send back the button to open web app */
+      this.telegramBot.sendMessage(chatId, 'Tap button below', {
+        reply_markup: {
+          inline_keyboard: [
+            [ {
+              text: 'Open',
+              web_app: {
+                url: webAppUrl,
+              },
+            } ],
+          ],
+        },
+      });
     });
-  });
+  }
 
-  eventBus.on('image-received', async (data) => {
-    const imageUrl = process.env.HOST_URL + '/' + data.path;
+  /**
+   * Creates stickerset with specified params
+   *
+   * @param params - stickerset params
+   */
+  public async createStickerset(params: StickersetParams): Promise<void> {
+    const botName = process.env.BOT_NAME || '';
+    const actualName = params.name + `_by_${botName}`;
 
-    /* Send image to chat */
-    bot.answerWebAppQuery(data.queryId, {
-      type: 'photo',
+    const isCreated = await this.telegramBot.createNewStickerSet(params.userId, actualName, params.title, params.pngSticker, params.emojis);
+
+    if (!isCreated) {
+      throw new Error('Error creating a stickerset');
+    }
+
+    const stickerset = await this.telegramBot.getStickerSet(actualName);
+    const firstStickerId = stickerset.stickers[0].file_id;
+
+    this.telegramBot.answerWebAppQuery(params.queryId, {
+      type: 'sticker',
+      sticker_file_id: firstStickerId,
       id: nanoid(),
-      photo_file_id: nanoid(),
-      photo_url: imageUrl,
-      thumb_url: imageUrl,
     });
-
-    console.log(data.userId);
-
-    // bot.createNewStickerSet(data.userId);
-    // bot.addStickerToSet()
-    // bot.uploadStickerFile()
-
-    // bot.answerInlineQuery('dd', 'dfdf', )
-
-    // bot.answerWebAppQuery('dd', {
-    //   type: 'sticker'
-    // })
-  });
-
-  eventBus.on('create-stickerset', async data => {
-    console.log(data);
-    const name = data.name + '_by_stkrz_bot';
-
-    await bot.createNewStickerSet(data.userId, name, data.title, data.image, data.emojis);
-    // bot.sendSticker()
-    const response = await bot.getStickerSet(name);
-    const fileId = response.stickers[0].file_id;
-
-    bot.sendSticker(chatIdGlobal, fileId);
-  });
+  }
 }
+
+
