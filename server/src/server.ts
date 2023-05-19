@@ -47,15 +47,14 @@ export class Server {
    * Creates the server and registers plugins
    */
   private createServer(): ReturnType<typeof fastify> {
-    const publicDir = 'public';
-    const publicAbsolutePath = path.join(path.resolve(), publicDir);
+    const publicAbsolutePath = path.join(path.resolve(), '..', 'webapp', 'dist');
     const server = fastify();
 
+    console.log(publicAbsolutePath);
     server.register(cors, {});
     server.register(multipart, { attachFieldsToBody: true });
     server.register(staticPlugin, {
       root: publicAbsolutePath,
-      prefix: `/${publicDir}/`,
     });
 
     return server;

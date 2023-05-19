@@ -12,6 +12,6 @@
     "skipLibCheck": true,
     "lib": ["esnext"],
     "baseUrl": ".",
-    "outDir": "server/build",
+    "outDir": "build",
   },
 }

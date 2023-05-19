@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "dev": "ts-node --esm ./index.ts",
-    "prod": "tsc && node build/index.js"
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/node-telegram-bot-api": "^0.61.6",

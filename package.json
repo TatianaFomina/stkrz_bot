@@ -6,6 +6,10 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "postinstall": "cd server && yarn install"
+    "install": "cd server && yarn install && cd ../webapp && yarn install",
+    "build_webapp": "cd webapp && yarn build",
+    "build_server": "cd server && yarn build",
+    "start_server": "cd server && node build/index.js",
+    "prod": "yarn install && yarn build_webapp && yarn build_server && start_server"
   }
 }
