@@ -21,15 +21,17 @@ export interface StickersetParams {
    */
   title: string;
 
-  /**
-   * Initial sticker png image
-   */
-  pngSticker: Buffer;
 
-  /**
-   * String with emojis representing sticker
-   */
-  emojis: string;
+  stickers: Array<{
+    /**
+     * Sticker png image
+     */
+    image: Buffer;
+    /**
+     * String with emojis representing sticker
+     */
+    emojis: string;
+  }>
 }
 
 export interface MessengerBot {

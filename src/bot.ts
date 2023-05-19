@@ -47,14 +47,24 @@ export class Bot implements MessengerBot {
   public async createStickerset(params: StickersetParams): Promise<void> {
     const botName = process.env.BOT_NAME || '';
     const actualName = params.name + `_by_${botName}`;
+    const initialSticker = params.stickers[0];
 
-    const isCreated = await this.telegramBot.createNewStickerSet(params.userId, actualName, params.title, params.pngSticker, params.emojis);
+    const isCreated = await this.telegramBot.createNewStickerSet(params.userId, actualName, params.title, initialSticker.image, initialSticker.emojis);
 
     if (!isCreated) {
       throw new Error('Error creating a stickerset');
     }
 
+    if (params.stickers.length > 1) {
+      for (let i = 1; i < params.stickers.length; i++) {
+        const sticker = params.stickers[i];
+
+        await this.telegramBot.addStickerToSet(params.userId, actualName, sticker.image, sticker.emojis, 'png_sticker');
+      }
+    }
+
     const stickerset = await this.telegramBot.getStickerSet(actualName);
+
     const firstStickerId = stickerset.stickers[0].file_id;
 
     this.telegramBot.answerWebAppQuery(params.queryId, {

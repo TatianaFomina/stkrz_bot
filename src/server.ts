@@ -5,7 +5,7 @@ import path from 'path';
 import fastify from 'fastify';
 import { FastifyRequest } from 'fastify/types/request';
 import { FastifyReply } from 'fastify';
-import { MessengerBot } from './types/messenger-bot';
+import { MessengerBot, StickersetParams } from './types/messenger-bot';
 
 
 /**
@@ -77,16 +77,23 @@ export class Server {
   private createStickerset = async (request: FastifyRequest, reply: FastifyReply): Promise<void> =>  {
     try {
       const body: any = request.body; // @todo remove any
-      const pngSticker = await body.image.toBuffer();
 
-      const params = {
-        pngSticker,
-        emojis: body.emojis.value,
+      const params: StickersetParams = {
+        stickers: [],
         userId: body.userId.value,
         queryId: body.queryId.value,
         name: body.name.value,
         title: body.title.value,
       };
+
+      for (let i = 0; i < body.stickers.length; i++) {
+        const image = await body.stickers[i].toBuffer();
+
+        params.stickers.push({
+          image,
+          emojis: body.emojis[i].value,
+        });
+      }
 
       await this.bot.createStickerset(params);
 
