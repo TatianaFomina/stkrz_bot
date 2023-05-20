@@ -85,13 +85,24 @@ export class Server {
         title: body.title.value,
       };
 
-      for (let i = 0; i < body.stickers.length; i++) {
-        const image = await body.stickers[i].toBuffer();
+      if (body.stickers.length === undefined) {
+        /** Stickers array contains single element */
+        const image = await body.stickers.toBuffer();
 
         params.stickers.push({
           image,
-          emojis: body.emojis[i].value,
+          emojis: body.emojis.value,
         });
+      } else {
+        /** Stickers array contains multiple elements */
+        for (let i = 0; i < body.stickers.length; i++) {
+          const image = await body.stickers[i].toBuffer();
+
+          params.stickers.push({
+            image,
+            emojis: body.emojis[i].value,
+          });
+        }
       }
 
       await this.bot.createStickerset(params);
