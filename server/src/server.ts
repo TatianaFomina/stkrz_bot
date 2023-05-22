@@ -50,7 +50,6 @@ export class Server {
     const publicAbsolutePath = path.join(path.resolve(), '..', 'webapp', 'dist');
     const server = fastify();
 
-    console.log(publicAbsolutePath);
     server.register(cors, {});
     server.register(multipart, { attachFieldsToBody: true });
     server.register(staticPlugin, {
@@ -65,6 +64,7 @@ export class Server {
    */
   private attachHandlers(): void {
     this.fastify.post('/create-stickerset', this.createStickerset);
+    this.fastify.post('/check-shortname', this.checkStickersetExists);
   }
 
   /**
@@ -108,6 +108,25 @@ export class Server {
       await this.bot.createStickerset(params);
 
       reply.code(200).send();
+    } catch (e) {
+      console.error((e as Error).message);
+
+      reply.code(500).send((e as Error).message);
+    }
+  };
+
+  /**
+   * Handles request to check stickerset existance
+   *
+   * @param request - request data
+   * @param reply - response object
+   */
+  private checkStickersetExists = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+    try {
+      const name = (request.body as any).name.value;
+      const exists = await this.bot.checkStickersetExists(name);
+
+      reply.code(200).send({ exists });
     } catch (e) {
       console.error((e as Error).message);
 

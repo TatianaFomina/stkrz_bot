@@ -36,7 +36,7 @@ const props = withDefaults(defineProps<{
   text: 'Sample text',
   size: 512,
   textSize: 44,
-  font: Font.Test,
+  font: Font.Kosko,
 });
 
 const emit = defineEmits<{(eventName: 'update', data: Blob | null): void }>();
@@ -47,6 +47,12 @@ const { displayText, getImageData } = useCanvas(containerRef);
 
 onMounted(async () => {
   await displayText(props.text, props.font, props.textSize);
+
+  setTimeout(async () => {
+    const data = await getImageData();
+
+    emit('update', data);
+  }, 100);
 });
 
 watch(() => [props.text, props.textSize, props.font], async () => {

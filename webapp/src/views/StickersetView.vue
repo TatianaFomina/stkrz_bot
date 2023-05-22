@@ -50,7 +50,7 @@
       v-model="stickersetName"
       pattern="[^-A-Za-z]"
       class="stickerset-view__input"
-      placeholder="Stickerset name"
+      placeholder="Stickerset short name"
     />
 
     <p class="stickerset-view__input-hint">
@@ -90,7 +90,7 @@ const {
 const router = useRouter();
 
 const { getStickers, setStickers, getTitle, setTitle, getName, setName } = useStore();
-const { createStickerset } = useServer();
+const { createStickerset, checkStickersetName } = useServer();
 
 const stickersetTitle = ref<string | null | undefined>();
 const stickersetName = ref<string | null | undefined>();
@@ -163,6 +163,14 @@ async function submit(): Promise<void> {
 
   try {
     showProgress();
+
+    const exists = await checkStickersetName(stickersetName.value);
+
+    if (exists) {
+      alert('Stickerset with such short name already exists. Please, choose another one');
+
+      return;
+    }
 
     await createStickerset({
       userId,

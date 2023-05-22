@@ -74,6 +74,25 @@ export class Bot implements MessengerBot {
       id: nanoid(),
     });
   }
+
+  /**
+   * Returns true if stickerset with specified name exists.
+   * Otherwise returns false
+   *
+   * @param name - stickerset short name
+   */
+  public async checkStickersetExists(name: string): Promise<boolean> {
+    try {
+      const botName = process.env.BOT_NAME || '';
+      const actualName = name + `_by_${botName}`;
+
+      const stickerset = await this.telegramBot.getStickerSet(actualName);
+
+      return stickerset !== undefined;
+    } catch (e) {
+      return false;
+    }
+  }
 }
 
 

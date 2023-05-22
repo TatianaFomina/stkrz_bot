@@ -69,13 +69,38 @@ export function useServer(): UseServer {
     }
   }
 
+  /**
+   * Checks if stickerset with specified short name already exists
+   * @param name - stickerset short name
+   */
+  async function checkStickersetName(name: string): Promise<boolean> {
+    try {
+      const formData = new FormData();
+
+      formData.append('name', name);
+
+      const response = await fetch(import.meta.env.VITE_API_URL + '/check-shortname', {
+        method: 'POST',
+        body: formData,
+      });
+      const result = await response.json();
+
+      return result.exists;
+    } catch (e) {
+      alert(e);
+      return false;
+    }
+  }
+
   return {
     sendImageData,
     createStickerset,
+    checkStickersetName,
   };
 }
 
 interface UseServer {
   sendImageData: (queryId: string, userId: number, blob: Blob) => Promise<void>;
   createStickerset: (params: StickersetParams) => Promise<void>;
+  checkStickersetName: (name: string) => Promise<boolean>;
 }

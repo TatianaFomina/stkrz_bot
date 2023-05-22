@@ -41,4 +41,12 @@ export interface MessengerBot {
    * @param params - stickerset params
    */
   createStickerset(params: StickersetParams): Promise<void>
+
+  /**
+   * Returns true if stickerset with specified name exists.
+   * Otherwise returns false
+   *
+   * @param name - stickerset short name
+   */
+  checkStickersetExists(name: string): Promise<boolean>;
 }
