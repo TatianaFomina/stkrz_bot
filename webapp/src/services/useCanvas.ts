@@ -25,12 +25,17 @@ export function useCanvas(canvas: Ref<HTMLCanvasElement | null>): UseCanvas {
 
     ctx.textAlign = 'center';
     ctx.font = `${fontSize}px ${font}`;
+    ctx.fillStyle = 'black';
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = fontSize / 4;
+    ctx.lineJoin = 'round';
 
     const lineHeight = fontSize + 20;
     const textWrapped = wrapText(ctx, text, canvas.value.width / 2, canvas.value.height / 2, canvas.value.width, lineHeight);
     const textWrappedAndAligned = alignWrappedTextVertically(ctx, textWrapped, canvas.value.height);
 
     textWrappedAndAligned.forEach(([text, x, y]) => {
+      ctx.strokeText(text, x, y);
       ctx.fillText(text, x, y);
     });
   }

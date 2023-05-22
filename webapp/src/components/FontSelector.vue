@@ -27,9 +27,11 @@ defineProps<{
 const emit = defineEmits<{(eventName: 'update:modelValue', value: Font): void }>();
 
 const fonts = [
-  { name: Font.Test, image: 'src/assets/font-previews/Test.png' },
-  { name: Font.Rocher, image: new URL('../assets/font-previews/Rocher.png', import.meta.url).href },
-
+  { name: Font.Kosko, image: new URL('../assets/font-previews/Kosko.png', import.meta.url).href },
+  { name: Font.Airfool, image: new URL('../assets/font-previews/Airfool.png', import.meta.url).href },
+  { name: Font.Durik, image: new URL('../assets/font-previews/Durik.png', import.meta.url).href },
+  { name: Font.Shadow, image: new URL('../assets/font-previews/Shadow.png', import.meta.url).href },
+  { name: Font.Swampy, image: new URL('../assets/font-previews/Swampy.png', import.meta.url).href },
 ];
 
 function onSelect(fontName: Font): void {

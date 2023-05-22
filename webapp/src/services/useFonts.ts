@@ -1,25 +1,29 @@
-import TestFontUrl from '../assets/Font.ttf';
-import AlpharatFontUrl from '../assets/ALPHARAT.ttf';
-import RocherFontUrl from '../assets/RocherColorGX.ttf';
+import KoskoFontUrl from '../assets/KoskoBold-Bold.ttf';
+import AirfoolFontUrl from '../assets/Airfool.ttf';
+import ShadowFontUrl from '../assets/Shadow-Regular.ttf';
+import SwampyFontUrl from '../assets/Swampy-Clean.ttf';
+import DurikFontUrl from '../assets/ДУРИК.ttf';
 
 /**
  * Available fonts
  */
 export enum Font {
-  Alpharat = 'Alpharat',
-  Nabla = 'Nabla',
-  Test = 'AnEmojiFamily-Regular',
-  Rocher = 'Rocher',
+  Kosko = 'Kosko',
+  Airfool = 'Airfool',
+  Shadow = 'Shadow',
+  Swampy = 'Swampy',
+  Durik = 'Durik',
 }
 
 /**
  * Stores urls from where fonts can be loaded
  */
 const fontsSources = {
-  [Font.Alpharat]: AlpharatFontUrl,
-  [Font.Nabla]: 'https://fonts.gstatic.com/s/nabla/v9/j8_D6-LI0Lvpe7Makz5UhJt9C3uqg_X_75gyGS4jAxsNIjrRBRdeFXZ6x96OvAFr.woff2',
-  [Font.Test]: TestFontUrl,
-  [Font.Rocher]: RocherFontUrl,
+  [Font.Kosko]: KoskoFontUrl,
+  [Font.Airfool]: AirfoolFontUrl,
+  [Font.Shadow]: ShadowFontUrl,
+  [Font.Swampy]: SwampyFontUrl,
+  [Font.Durik]: DurikFontUrl,
 };
 
 /**

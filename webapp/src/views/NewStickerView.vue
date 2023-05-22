@@ -31,8 +31,8 @@
       <Slider
         v-model="textSize"
         class="new-sticker__slider"
-        :min="36"
-        :max="100"
+        :min="72"
+        :max="136"
         :step="8"
       />
       <p class="new-sticker__size-big">
@@ -93,8 +93,8 @@ const props = defineProps<{
 }>();
 
 const text = ref<string>('PIDOR');
-const textSize = ref<number>(68);
-const font = ref<Font>(Font.Test);
+const textSize = ref<number>(104);
+const font = ref<Font>(Font.Kosko);
 const imageData = ref<Blob | null>(null);
 
 onMounted(async () => {
