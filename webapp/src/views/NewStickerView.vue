@@ -92,7 +92,7 @@ const props = defineProps<{
    back?: boolean;
 }>();
 
-const text = ref<string>('PIDOR');
+const text = ref<string>('Hey You Lazy');
 const textSize = ref<number>(104);
 const font = ref<Font>(Font.Kosko);
 const imageData = ref<Blob | null>(null);
