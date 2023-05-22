@@ -14,7 +14,12 @@
       class="new-sticker__empty"
     />
 
-    <Input
+    <!-- <Input
+      v-model="text"
+      class="new-sticker__input"
+      placeholder="Text"
+    /> -->
+    <Textarea
       v-model="text"
       class="new-sticker__input"
       placeholder="Text"
@@ -57,11 +62,11 @@ import { useRouter } from 'vue-router';
 import { useTelegramWebApp, useTelegramWebAppBackButton, useTelegramWebAppMainButton } from '../services/useTelegramWebApp';
 import { useStore } from '../services/useStore';
 import ImagePreview from '../components/ImagePreview.vue';
-import Input from '../components/Input.vue';
 import EmptyPreview from '../components/EmptyPreview.vue';
 import Slider from '../components/Slider.vue';
 import FontSelector from '../components/FontSelector.vue';
 import { Font } from '../services/useFonts';
+import Textarea from '../components/Textarea.vue';
 
 const {
   impactOccurred,
