@@ -47,9 +47,10 @@ export class Bot implements MessengerBot {
   public async createStickerset(params: StickersetParams): Promise<void> {
     const botName = process.env.BOT_NAME || '';
     const actualName = params.name + `_by_${botName}`;
+    const actualTitle = params.title + ` :: @${botName}`;
     const initialSticker = params.stickers[0];
 
-    const isCreated = await this.telegramBot.createNewStickerSet(params.userId, actualName, params.title, initialSticker.image, initialSticker.emojis);
+    const isCreated = await this.telegramBot.createNewStickerSet(params.userId, actualName, actualTitle, initialSticker.image, initialSticker.emojis);
 
     if (!isCreated) {
       throw new Error('Error creating a stickerset');
