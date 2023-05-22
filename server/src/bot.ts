@@ -24,11 +24,11 @@ export class Bot implements MessengerBot {
       const chatId = msg.chat.id;
 
       /* Send back the button to open web app */
-      this.telegramBot.sendMessage(chatId, 'Tap button below', {
+      this.telegramBot.sendMessage(chatId, 'Click button below to launch stickers editor 👇', {
         reply_markup: {
           inline_keyboard: [
             [ {
-              text: 'Open',
+              text: '✨ Start ✨',
               web_app: {
                 url: webAppUrl,
               },
