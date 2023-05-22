@@ -3,8 +3,10 @@ Allows to create personalised sticker packs. Lets you make your own text sticker
 
 
 ## Iterface
-<img width="320" src="./assets/view1.png">
-<img width="320" src="./assets/view2.png" style="margin-left: 30px">
+<div style="display: flex; flex-wrap: wrap; gap: 30px">
+  <img src="./assets/view1.png" style="display: block; flex: 1; min-width: 300px;">
+  <img src="./assets/view2.png" style="display: block; flex: 1; min-width: 300px;">
+</div>
 
 ## Running locally
 
