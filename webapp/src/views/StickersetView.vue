@@ -19,14 +19,22 @@
         </button>
       </div>
     </div>
+
     <button
+      v-if="stickers.length <= maxStickers"
       class="stickerset-view__add"
       @click="addNewSticker"
     >
       <PlusIcon />
-
       Add new sticker
     </button>
+
+    <p
+      v-else
+      class="stickerset-view__message"
+    >
+      Maximum number of stickers in stickerset <br> exceeded
+    </p>
 
     <Input
       v-model="stickersetTitle"
@@ -87,6 +95,7 @@ const { createStickerset } = useServer();
 const stickersetTitle = ref<string | null | undefined>();
 const stickersetName = ref<string | null | undefined>();
 const stickers = ref<Sticker[]>([]);
+const maxStickers = 50;
 
 onMounted(() => {
   setMainButtonText('PUBLISH');
@@ -238,6 +247,11 @@ function getUrl(data: Blob): string {
       height: 18px;
       margin-right: 4px;
     }
+  }
+
+  &__message {
+    text-align: center;
+    color: var(--color-text-secondary);
   }
 }
 </style>

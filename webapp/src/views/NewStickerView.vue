@@ -14,11 +14,6 @@
       class="new-sticker__empty"
     />
 
-    <!-- <Input
-      v-model="text"
-      class="new-sticker__input"
-      placeholder="Text"
-    /> -->
     <Textarea
       v-model="text"
       class="new-sticker__input"
