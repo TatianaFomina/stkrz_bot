@@ -28,7 +28,7 @@ export class Bot implements MessengerBot {
         reply_markup: {
           inline_keyboard: [
             [ {
-              text: '✨ Start ✨',
+              text: '✨ Open ✨',
               web_app: {
                 url: webAppUrl,
               },

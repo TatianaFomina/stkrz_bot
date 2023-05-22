@@ -4,6 +4,7 @@ declare global {
       WebApp: {
         ready: () => void;
         close: () => void;
+        expand: () => void;
         sendData: (data: string) => void;
         initDataUnsafe: {
           query_id: string;
@@ -54,6 +55,7 @@ export function useTelegramWebApp(): UseTelegramWebApp {
    */
   function ready(): void {
     tgWebApp?.ready();
+    tgWebApp?.expand();
   }
 
   /**
