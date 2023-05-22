@@ -2,6 +2,7 @@ import { type Ref } from 'vue';
 import { useFonts, type Font } from './useFonts';
 import { wrapText } from '../utils/wrap-text';
 import { alignWrappedTextVertically } from '../utils/align-wrapped-text-vertically';
+import { alignWrappedTextHorizontally } from '../utils/align-wrapped-text-horizontally';
 
 export function useCanvas(canvas: Ref<HTMLCanvasElement | null>): UseCanvas {
   const { load, exists } = useFonts();
@@ -34,7 +35,8 @@ export function useCanvas(canvas: Ref<HTMLCanvasElement | null>): UseCanvas {
     const paragraphs = text.split(/\r?\n/);
     // @ts-expect-error canvas.value can not be null, as there is a check at the beginning of the function
     const textWrapped = paragraphs.map((p, index) => wrapText(ctx, p, canvas.value.width / 2, canvas.value.height / 2 + index * lineHeight, canvas.value.width, lineHeight)).flat();
-    const textWrappedAndAligned = alignWrappedTextVertically(ctx, textWrapped, canvas.value.height);
+    const textWrappedAndAlignedVertically = alignWrappedTextVertically(ctx, textWrapped, canvas.value.height);
+    const textWrappedAndAligned = alignWrappedTextHorizontally(ctx, textWrappedAndAlignedVertically, canvas.value.width);
 
     textWrappedAndAligned.forEach(([text, x, y]) => {
       ctx.strokeText(text, x, y);
