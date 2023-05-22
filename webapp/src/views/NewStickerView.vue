@@ -98,7 +98,7 @@ const font = ref<Font>(Font.Kosko);
 const imageData = ref<Blob | null>(null);
 
 onMounted(async () => {
-  setMainButtonText('ADD');
+  setMainButtonText(props.back ? 'ADD' : 'CREATE STICKER');
   showMainButton();
   addMainButtonClickHandler(onClick);
 

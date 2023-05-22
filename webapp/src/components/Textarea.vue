@@ -77,6 +77,7 @@ function clear(): void {
   box-sizing: border-box;
 
   &__input {
+    resize: none;
     border: none;
     background: transparent;
     font-size: 16px;
