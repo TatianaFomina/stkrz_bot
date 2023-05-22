@@ -1,8 +1,8 @@
-import KoskoFontUrl from '../assets/KoskoBold-Bold.ttf';
-import AirfoolFontUrl from '../assets/Airfool.ttf';
-import ShadowFontUrl from '../assets/Shadow-Regular.ttf';
-import SwampyFontUrl from '../assets/Swampy-Clean.ttf';
-import DurikFontUrl from '../assets/ДУРИК.ttf';
+import KoskoFontUrl from '../assets/fonts/KoskoBold-Bold.ttf';
+import AirfoolFontUrl from '../assets/fonts/Airfool.ttf';
+import ShadowFontUrl from '../assets/fonts/Shadow-Regular.ttf';
+import SwampyFontUrl from '../assets/fonts/Swampy-Clean.ttf';
+import DurikFontUrl from '../assets/fonts/ДУРИК.ttf';
 
 /**
  * Available fonts
