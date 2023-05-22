@@ -2,7 +2,7 @@
 Allows to create personalised sticker packs. Lets you make your own text stickers for any occasion with just a few clicks using cool graphic interface 💅🛍️
 
 
-## Iterface
+## Interface
 ![Bot interface](./assets/interface.png)
 
 ## Running locally
