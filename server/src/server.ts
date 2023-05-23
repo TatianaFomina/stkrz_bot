@@ -55,6 +55,9 @@ export class Server {
     server.register(staticPlugin, {
       root: publicAbsolutePath,
     });
+    server.setNotFoundHandler((request, reply) => {
+      reply.sendFile('index.html');
+    });
 
     return server;
   }
