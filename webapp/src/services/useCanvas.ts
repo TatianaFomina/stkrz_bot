@@ -23,7 +23,6 @@ export function useCanvas(canvas: Ref<HTMLCanvasElement | null>): UseCanvas {
     if (!exists(font)) {
       await load(font);
     }
-
     ctx.textAlign = 'center';
     ctx.font = `${fontSize}px ${font}`;
     ctx.fillStyle = 'black';
@@ -36,7 +35,7 @@ export function useCanvas(canvas: Ref<HTMLCanvasElement | null>): UseCanvas {
     // @ts-expect-error canvas.value can not be null, as there is a check at the beginning of the function
     const textWrapped = paragraphs.map((p, index) => wrapText(ctx, p, canvas.value.width / 2, canvas.value.height / 2 + index * lineHeight, canvas.value.width, lineHeight)).flat();
     const textWrappedAndAlignedVertically = alignWrappedTextVertically(ctx, textWrapped, canvas.value.height);
-    const textWrappedAndAligned = alignWrappedTextHorizontally(ctx, textWrappedAndAlignedVertically, canvas.value.width);
+    const textWrappedAndAligned = alignWrappedTextHorizontally(ctx, textWrappedAndAlignedVertically, font, fontSize);
 
     textWrappedAndAligned.forEach(([text, x, y]) => {
       ctx.strokeText(text, x, y);
