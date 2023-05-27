@@ -10,6 +10,7 @@ declare global {
           query_id: string;
           user: {
             id: number;
+            language_code: string;
           };
         };
         MainButton: MainButton;
@@ -49,6 +50,7 @@ const tgWebApp = window.Telegram?.WebApp;
 export function useTelegramWebApp(): UseTelegramWebApp {
   const queryId = tgWebApp?.initDataUnsafe.query_id;
   const userId = tgWebApp?.initDataUnsafe?.user?.id;
+  const language = tgWebApp?.initDataUnsafe.user?.language_code;
 
   /**
    * Informs the Telegram app that the Web App is ready to be displayed.
@@ -76,6 +78,7 @@ export function useTelegramWebApp(): UseTelegramWebApp {
   return {
     queryId,
     userId,
+    language,
     ready,
     close,
     impactOccurred,
@@ -85,6 +88,7 @@ export function useTelegramWebApp(): UseTelegramWebApp {
 interface UseTelegramWebApp {
   queryId: string | undefined;
   userId: number | undefined;
+  language: string | undefined;
   ready: () => void;
   close: () => void;
   impactOccurred: (style: HapticImpactStyle) => void;

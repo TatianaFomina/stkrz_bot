@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <div class="stickerset-view">
     <div class="stickerset-view__stickers">
@@ -26,35 +27,35 @@
       @click="addNewSticker"
     >
       <PlusIcon />
-      Add new sticker
+      {{ t('stickers_view.add_sticker') }}
     </button>
 
     <p
       v-else
       class="stickerset-view__message"
     >
-      Maximum number of stickers in stickerset <br> exceeded
+      <span v-html="t('stickers_view.max_exceeded')" />
     </p>
 
     <Input
       v-model="stickersetTitle"
       class="stickerset-view__input"
-      placeholder="Stickerset title"
+      :placeholder="t('stickers_view.title_placeholder')"
     />
 
     <p class="stickerset-view__input-hint">
-      Title that is displayed to the users of the stickerset
+      {{ t('stickers_view.title_hint') }}
     </p>
 
     <Input
       v-model="stickersetName"
       pattern="[^-A-Za-z]"
       class="stickerset-view__input"
-      placeholder="Stickerset short name"
+      :placeholder="t('stickers_view.name_placeholder')"
     />
 
     <p class="stickerset-view__input-hint">
-      Unique identifier used for referencing stickers. <br>Be cautious, stickerset name can not be changed later
+      <span v-html="t('stickers_view.name_hint')" />
     </p>
   </div>
 </template>
@@ -68,6 +69,7 @@ import { useRouter } from 'vue-router';
 import { Sticker } from '../types/sticker';
 import { useStore } from '../services/useStore';
 import { useServer } from '../services/useServer';
+import { useLocale } from '../services/useLocale';
 import Cross from '../icons/Cross.vue';
 
 const {
@@ -89,6 +91,8 @@ const {
 
 const router = useRouter();
 
+const { t } = useLocale();
+
 const { getStickers, setStickers, getTitle, setTitle, getName, setName } = useStore();
 const { createStickerset, checkStickersetName } = useServer();
 
@@ -98,7 +102,7 @@ const stickers = ref<Sticker[]>([]);
 const maxStickers = 50;
 
 onMounted(() => {
-  setMainButtonText('PUBLISH');
+  setMainButtonText(t('stickers_view.publish'));
   addMainButtonClickHandler(submit);
 
   stickers.value = getStickers();
@@ -167,7 +171,7 @@ async function submit(): Promise<void> {
     const exists = await checkStickersetName(stickersetName.value);
 
     if (exists) {
-      alert('Stickerset with such short name already exists. Please, choose another one');
+      alert(t('stickers_view.stickerpask_exists'));
 
       return;
     }

@@ -10,6 +10,7 @@
     "build": "tsc"
   },
   "devDependencies": {
+    "@types/i18n": "^0.13.6",
     "@types/node-telegram-bot-api": "^0.61.6",
     "eslint": "^8.39.0",
     "eslint-config-codex": "^1.7.2",
@@ -23,6 +24,7 @@
     "@fastify/static": "^6.10.1",
     "dotenv": "^16.0.3",
     "fastify": "^4.17.0",
+    "i18n": "^0.15.1",
     "nanoid": "^4.0.2",
     "node-telegram-bot-api": "^0.61.0"
   }

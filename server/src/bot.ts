@@ -1,6 +1,7 @@
 import TelegramBot from 'node-telegram-bot-api';
 import { nanoid } from 'nanoid';
 import { MessengerBot, StickersetParams } from './types/messenger-bot';
+import { __, setLocale } from './i18n/index.js';
 
 /**
  * Telegram messenger bot
@@ -15,20 +16,24 @@ export class Bot implements MessengerBot {
     const token = process.env.TG_API_TOKEN || '';
     const webAppUrl = process.env.WEB_APP_URL || '';
 
-
     /* Create a bot that uses 'polling' to fetch new updates */
     this.telegramBot = new TelegramBot(token, { polling: true });
 
     /* Handle "/start" message */
     this.telegramBot.onText(/\/start/, (msg) => {
       const chatId = msg.chat.id;
+      const lang = msg.from?.language_code;
+
+      if (lang !== undefined) {
+        setLocale(lang);
+      }
 
       /* Send back the button to open web app */
-      this.telegramBot.sendMessage(chatId, 'Click button below to launch stickers editor 👇', {
+      this.telegramBot.sendMessage(chatId, __('prompt'), {
         reply_markup: {
           inline_keyboard: [
             [ {
-              text: '✨ Open ✨',
+              text: __('button_text'),
               web_app: {
                 url: webAppUrl,
               },

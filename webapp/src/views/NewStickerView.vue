@@ -17,11 +17,11 @@
     <Textarea
       v-model="text"
       class="new-sticker__input"
-      placeholder="Text"
+      :placeholder="t('editor.text_placeholder')"
     />
 
     <p class="new-sticker__input-hint">
-      Enter text you wish to see on the sticker
+      {{ t('editor.text_prompt') }}
     </p>
 
     <div class="new-sticker__size-input">
@@ -46,7 +46,7 @@
     />
 
     <p class="new-sticker__input-hint">
-      Select text style
+      {{ t('editor.style_prompt') }}
     </p>
   </div>
 </template>
@@ -62,6 +62,7 @@ import Slider from '../components/Slider.vue';
 import FontSelector from '../components/FontSelector.vue';
 import { Font } from '../services/useFonts';
 import Textarea from '../components/Textarea.vue';
+import { useLocale } from '../services/useLocale';
 
 const {
   impactOccurred,
@@ -85,6 +86,8 @@ const {
 const { addStickerData: addStickerToStore } = useStore();
 const router = useRouter();
 
+const { t } = useLocale();
+
 const props = defineProps<{
   /**
    * True if back button should be displayed
@@ -92,13 +95,13 @@ const props = defineProps<{
    back?: boolean;
 }>();
 
-const text = ref<string>('Hey You Lazy');
+const text = ref<string>(t('editor.start_text'));
 const textSize = ref<number>(104);
 const font = ref<Font>(Font.Kosko);
 const imageData = ref<Blob | null>(null);
 
 onMounted(async () => {
-  setMainButtonText(props.back ? 'ADD' : 'CREATE STICKER');
+  setMainButtonText(props.back ? t('editor.add') : t('editor.create'));
   showMainButton();
   addMainButtonClickHandler(onClick);
 

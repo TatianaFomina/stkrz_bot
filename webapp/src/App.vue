@@ -8,11 +8,17 @@
 import { onMounted } from 'vue';
 
 import { useTelegramWebApp } from './services/useTelegramWebApp';
+import { useLocale } from './services/useLocale';
 
-const { ready } = useTelegramWebApp();
+const { ready, language } = useTelegramWebApp();
+const { setLocale } = useLocale();
 
 onMounted(() => {
   ready();
+
+  if (language !== undefined) {
+    setLocale(language);
+  }
 });
 </script>
 
