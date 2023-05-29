@@ -34,6 +34,7 @@ function measureText(text: string, font: Font, size: number): number {
   div.style.fontSize = size + 'px';
   div.style.fontFamily = font;
   div.style.position = 'absolute';
+  div.style.minWidth = '-webkit-max-content';
 
   div.appendChild(textNode);
 
