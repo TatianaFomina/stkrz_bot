@@ -13,6 +13,8 @@ export default {
     text_prompt: 'Введите текст, который отобразится на стикере',
     text_placeholder: 'Текст',
     style_prompt: 'Выберите стиль текста',
+    size_hint: 'Выберите размер текста',
+    stroke_hint: 'Выберите размер обводки',
     add: 'ДОБАВИТЬ',
     create: 'СОЗДАТЬ СТИКЕР',
     start_text: 'Эй ленивец',

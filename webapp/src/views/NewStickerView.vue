@@ -5,6 +5,7 @@
       class="new-sticker__preview"
       :text="text"
       :text-size="textSize"
+      :stroke-size="strokeSize"
       :font="font"
       @update="onImageDataUpdate"
     />
@@ -28,6 +29,7 @@
       <p class="new-sticker__size-small">
         A
       </p>
+
       <Slider
         v-model="textSize"
         class="new-sticker__slider"
@@ -35,10 +37,15 @@
         :max="136"
         :step="8"
       />
+
       <p class="new-sticker__size-big">
         A
       </p>
     </div>
+
+    <p class="new-sticker__input-hint">
+      {{ t('editor.size_hint') }}
+    </p>
 
     <FontSelector
       v-model="font"
@@ -47,6 +54,28 @@
 
     <p class="new-sticker__input-hint">
       {{ t('editor.style_prompt') }}
+    </p>
+
+    <div class="new-sticker__stroke-size-input">
+      <p class="new-sticker__stroke-size-small">
+        0
+      </p>
+
+      <Slider
+        v-model="strokeSize"
+        class="new-sticker__slider"
+        :min="0"
+        :max="40"
+        :step="8"
+      />
+
+      <p class="new-sticker__stroke-size-big">
+        Max
+      </p>
+    </div>
+
+    <p class="new-sticker__input-hint">
+      {{ t('editor.stroke_hint') }}
     </p>
   </div>
 </template>
@@ -97,6 +126,7 @@ const props = defineProps<{
 
 const text = ref<string>(t('editor.start_text'));
 const textSize = ref<number>(104);
+const strokeSize = ref<number>(24);
 const font = ref<Font>(Font.Kosko);
 const imageData = ref<Blob | null>(null);
 
@@ -132,7 +162,7 @@ watch(text, () => {
 /**
  * Play vibration when text size changes
  */
-watch(textSize, () => {
+watch([textSize, font, strokeSize], () => {
   impactOccurred('light');
 });
 
@@ -189,11 +219,12 @@ function onImageDataUpdate(data: Blob | null): void {
   }
 
   &__size-input {
+    background-color: var(--color-background-secondary);
+    border-radius: 10px;
     align-self: stretch;
     display: flex;
     align-items: center;
-    padding: 0 14px;
-
+    padding: 16px 14px;
   }
 
   &__slider {
@@ -216,6 +247,27 @@ function onImageDataUpdate(data: Blob | null): void {
 
   &__font-selector {
     align-self: stretch;
+  }
+
+  &__stroke-size-input {
+    align-self: stretch;
+    background-color: var(--color-background-secondary);
+    border-radius: 10px;
+    padding: 16px 14px;
+    display: flex;
+    align-items: center;
+  }
+
+  &__stroke-size-small {
+    color: var(--color-text-secondary);
+    margin-right: 16px;
+    font-weight: 500;
+  }
+
+  &__stroke-size-big {
+    color: var(--color-text-secondary);
+    margin-left: 16px;
+    font-weight: 500;
   }
 
 }

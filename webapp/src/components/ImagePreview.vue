@@ -24,6 +24,11 @@ const props = withDefaults(defineProps<{
   textSize?: number;
 
   /**
+   * Size of the text stroke
+   */
+  strokeSize?: number;
+
+  /**
    * Font family name of the text displayed on the canvas
    */
   font?: Font;
@@ -35,6 +40,7 @@ const props = withDefaults(defineProps<{
 }>(), {
   text: 'Sample text',
   size: 512,
+  strokeSize: 16,
   textSize: 44,
   font: Font.Kosko,
 });
@@ -46,24 +52,22 @@ const containerRef = ref<HTMLCanvasElement | null>(null);
 const { displayText, getImageData } = useCanvas(containerRef);
 
 onMounted(async () => {
-  await displayText(props.text, props.font, props.textSize);
-
-  setTimeout(async () => {
-    const data = await getImageData();
-
-    emit('update', data);
-  }, 100);
+  await updateImage();
 });
 
-watch(() => [props.text, props.textSize, props.font], async () => {
-  await displayText(props.text, props.font, props.textSize);
+watch(() => [props.text, props.textSize, props.font, props.strokeSize], async () => {
+  await updateImage();
+}, { immediate: true });
+
+async function updateImage(): Promise<void> {
+  await displayText(props.text, { font: props.font, fontSize: props.textSize, strokeSize: props.strokeSize });
 
   setTimeout(async () => {
     const data = await getImageData();
 
     emit('update', data);
   }, 100);
-}, { immediate: true });
+}
 </script>
 
 <style lang="postcss">

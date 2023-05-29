@@ -4,10 +4,16 @@ import { wrapText } from '../utils/wrap-text';
 import { alignWrappedTextVertically } from '../utils/align-wrapped-text-vertically';
 import { alignWrappedTextHorizontally } from '../utils/align-wrapped-text-horizontally';
 
+interface TextParams {
+  font: Font;
+  fontSize: number;
+  strokeSize: number;
+}
+
 export function useCanvas(canvas: Ref<HTMLCanvasElement | null>): UseCanvas {
   const { load, exists } = useFonts();
 
-  async function displayText(text: string, font: Font, fontSize: number): Promise<void> {
+  async function displayText(text: string, params: TextParams): Promise<void> {
     if (canvas.value === null) {
       return;
     }
@@ -20,25 +26,29 @@ export function useCanvas(canvas: Ref<HTMLCanvasElement | null>): UseCanvas {
 
     ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
 
-    if (!exists(font)) {
-      await load(font);
+    if (!exists(params.font)) {
+      await load(params.font);
     }
+
     ctx.textAlign = 'center';
-    ctx.font = `${fontSize}px ${font}`;
+    ctx.font = `${params.fontSize}px ${params.font}`;
     ctx.fillStyle = 'black';
     ctx.strokeStyle = 'white';
-    ctx.lineWidth = fontSize / 4;
+    ctx.lineWidth = params.strokeSize;
     ctx.lineJoin = 'round';
 
-    const lineHeight = fontSize + 20;
+    const lineHeight = params.fontSize + 20;
     const paragraphs = text.split(/\r?\n/);
     // @ts-expect-error canvas.value can not be null, as there is a check at the beginning of the function
     const textWrapped = paragraphs.map((p, index) => wrapText(ctx, p, canvas.value.width / 2, canvas.value.height / 2 + index * lineHeight, canvas.value.width, lineHeight)).flat();
     const textWrappedAndAlignedVertically = alignWrappedTextVertically(ctx, textWrapped, canvas.value.height);
-    const textWrappedAndAligned = alignWrappedTextHorizontally(ctx, textWrappedAndAlignedVertically, font, fontSize);
+    const textWrappedAndAligned = alignWrappedTextHorizontally(ctx, textWrappedAndAlignedVertically, params.font, params.fontSize);
 
     textWrappedAndAligned.forEach(([text, x, y]) => {
-      ctx.strokeText(text, x, y);
+      if (params.strokeSize !== 0) {
+        ctx.strokeText(text, x, y);
+      }
+
       ctx.fillText(text, x, y);
     });
   }
@@ -58,6 +68,6 @@ export function useCanvas(canvas: Ref<HTMLCanvasElement | null>): UseCanvas {
 }
 
 interface UseCanvas {
-  displayText: (text: string, font: Font, textSize: number) => Promise<void>;
+  displayText: (text: string, params: TextParams) => Promise<void>;
   getImageData: () => Promise<Blob | null>;
 }

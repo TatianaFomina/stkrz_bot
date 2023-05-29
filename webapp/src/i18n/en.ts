@@ -13,6 +13,8 @@ export default {
     text_prompt: 'Enter text you wish to see on the sticker',
     text_placeholder: 'Text',
     style_prompt: 'Select text style',
+    size_hint: 'Choose text size',
+    stroke_hint: 'Choose stroke size',
     add: 'ADD',
     create: 'CREATE STICKER',
     start_text: 'Hey You Lazy',
