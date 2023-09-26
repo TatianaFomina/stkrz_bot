@@ -13,7 +13,7 @@ import { MessengerBot, StickersetParams } from './types/messenger-bot';
  */
 export class Server {
   /** Port server listens to */
-  private PORT = 3000;
+  private PORT = process.env.PORT || 3000;
 
   /** Fastify instance */
   private readonly fastify;
