@@ -15,9 +15,15 @@ export class Bot implements MessengerBot {
   constructor() {
     const token = process.env.TG_API_TOKEN || '';
     const webAppUrl = process.env.WEB_APP_URL || '';
+    const isProd = process.env.DEV === 'true';
 
     /* Create a bot that uses 'polling' to fetch new updates */
-    this.telegramBot = new TelegramBot(token, { polling: true });
+    this.telegramBot = new TelegramBot(token, {
+      polling: true,
+      /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+      /* @ts-ignore */
+      testEnvironment: isProd,
+    });
 
     /* Handle "/start" message */
     this.telegramBot.onText(/\/start/, (msg) => {
