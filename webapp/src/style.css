@@ -7,7 +7,7 @@
 
   color-scheme: light dark;
   color: var(--color-text);
-  background-color: var(--color-background);
+  background-color: var(--color-background-secondary);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

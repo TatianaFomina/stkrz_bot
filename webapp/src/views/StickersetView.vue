@@ -41,28 +41,22 @@
       v-model="stickersetTitle"
       class="stickerset-view__input"
       :placeholder="t('stickers_view.title_placeholder')"
+      :hint="t('stickers_view.title_hint')"
     />
-
-    <p class="stickerset-view__input-hint">
-      {{ t('stickers_view.title_hint') }}
-    </p>
 
     <Input
       v-model="stickersetName"
       pattern="[^-A-Za-z]"
       class="stickerset-view__input"
       :placeholder="t('stickers_view.name_placeholder')"
+      :hint="t('stickers_view.name_hint')"
     />
-
-    <p class="stickerset-view__input-hint">
-      <span v-html="t('stickers_view.name_hint')" />
-    </p>
   </div>
 </template>
 
 <script lang='ts' setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue';
-import Input from '../components/Input.vue';
+import Input from '../components/input/index.ts';
 import PlusIcon from '../icons/Plus.vue';
 import { useTelegramWebApp, useTelegramWebAppMainButton } from '../services/useTelegramWebApp';
 import { useRouter } from 'vue-router';
@@ -222,14 +216,6 @@ function getUrl(data: Blob): string {
 
   & > *:not(:first-child) {
     margin-top: 28px;
-  }
-
-  &__input-hint {
-    color: var(--color-text-secondary);
-    font-size: 14px;
-    margin-top: 6px !important;
-    align-self: start;
-    margin-left: 12px;
   }
 
   &__delete-item {

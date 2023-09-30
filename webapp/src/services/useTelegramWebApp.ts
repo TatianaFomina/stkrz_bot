@@ -6,6 +6,7 @@ declare global {
         close: () => void;
         expand: () => void;
         sendData: (data: string) => void;
+        platform: Platform;
         initDataUnsafe: {
           query_id: string;
           user: {
@@ -20,6 +21,8 @@ declare global {
     };
   }
 }
+
+export type Platform = 'macos' | 'ios' | 'android' | 'web' | 'unknown';
 
 interface MainButton {
   text: string;
@@ -51,6 +54,7 @@ export function useTelegramWebApp(): UseTelegramWebApp {
   const queryId = tgWebApp?.initDataUnsafe.query_id;
   const userId = tgWebApp?.initDataUnsafe?.user?.id;
   const language = tgWebApp?.initDataUnsafe.user?.language_code;
+  const platform = tgWebApp?.platform;
 
   /**
    * Informs the Telegram app that the Web App is ready to be displayed.
@@ -79,6 +83,7 @@ export function useTelegramWebApp(): UseTelegramWebApp {
     queryId,
     userId,
     language,
+    platform,
     ready,
     close,
     impactOccurred,
@@ -89,6 +94,7 @@ interface UseTelegramWebApp {
   queryId: string | undefined;
   userId: number | undefined;
   language: string | undefined;
+  platform: Platform | undefined;
   ready: () => void;
   close: () => void;
   impactOccurred: (style: HapticImpactStyle) => void;

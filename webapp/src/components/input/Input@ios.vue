@@ -1,32 +1,42 @@
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <div class="input">
-    <input
-      ref="input"
-      type="text"
-      class="input__input"
-      :value="modelValue"
-      :placeholder="placeholder"
-      @keyup="onInput"
-      @keydown="validate"
-    >
-    <button
-      v-if="modelValue"
-      class="input__clear"
-      @click="clear"
-    >
-      <Cross />
-    </button>
+    <div class="input-field">
+      <input
+        ref="input"
+        type="text"
+        class="input-field__input"
+        :value="modelValue"
+        :placeholder="placeholder"
+        @keyup="onInput"
+        @keydown="validate"
+      >
+      <button
+        v-if="modelValue"
+        class="input-field__clear"
+        @click="clear"
+      >
+        <Cross />
+      </button>
+    </div>
+
+    <p
+      v-if="hint"
+      class="input__hint"
+      v-html="hint"
+    />
   </div>
 </template>
 
 <script lang='ts' setup>
 import { ref } from 'vue';
-import Cross from '../icons/Cross.vue';
+import Cross from '../../icons/Cross.vue';
 
 const props = defineProps<{
   modelValue: string | null | undefined;
   placeholder?: string;
   pattern?: string;
+  hint?: string;
 }>();
 
 const emit = defineEmits<{(eventName: 'update:modelValue', value: string): void }>();
@@ -66,24 +76,38 @@ function clear(): void {
 
 <style lang="postcss">
 .input {
+  &__hint {
+    color: var(--color-text-secondary);
+    font-size: 13px;
+    margin-top: 8px !important;
+    align-self: start;
+    margin-left: 17px;
+    margin-right: 17px;
+  }
+}
+
+.input-field {
   background-color: var(--color-background-secondary);
   border-radius: 10px;
   display: flex;
-  padding: 10px 12px;
+  padding-left: 17px;
+  padding-right: 17px;
   box-sizing: border-box;
+  height: 44px;
 
   &__input {
     border: none;
     background: transparent;
-    font-size: 16px;
+    font-size: 17px;
     height: 100%;
     flex: 1;
     color: var(--color-text);
     padding: 0;
-    height: 24px;
 
     &::placeholder {
+      /* color: var(--color-text); */
       color: var(--color-text-secondary);
+      opacity: 0.5;
     }
 
     &:focus {
@@ -92,11 +116,10 @@ function clear(): void {
   }
 
   &__clear {
-    background: var(--color-text-secondary);
-    color: var(--color-background-secondary);
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
     border-radius: 12px;
-    width: 16px;
-    height: 16px;
     flex-shrink: 0;
     align-self: center;
     display: flex;

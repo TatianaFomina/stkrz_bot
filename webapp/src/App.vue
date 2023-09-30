@@ -25,5 +25,8 @@ onMounted(() => {
 <style scoped lang="postcss">
 .app {
   max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  background: var(--color-background);
 }
 </style>

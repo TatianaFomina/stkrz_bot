@@ -1,7 +1,7 @@
 
 :root {
-  --color-background: var(--tg-theme-bg-color, #1A222C);
-  --color-background-secondary: var(--tg-theme-secondary-bg-color, #131415);
+  --color-background: var(--tg-theme-secondary-bg-color, #131415);
+  --color-background-secondary: var(--tg-theme-bg-color, #1A222C);
   --color-text: var(--tg-theme-text-color, white);
   --color-text-secondary: var(--tg-theme-hint-color, #B4C2D3);
   --color-accent: var(--tg-theme-button-color, #55A4F8);
