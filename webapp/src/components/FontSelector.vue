@@ -42,8 +42,7 @@ function onSelect(fontName: Font): void {
 <style lang="postcss">
 .font-selector {
   background-color: var(--color-background-secondary);
-  border-radius: 10px;
-  padding: 10px 12px;
+  padding: 10px 17px;
   display: flex;
   overflow: auto;
   scrollbar-width: none;
@@ -57,13 +56,13 @@ function onSelect(fontName: Font): void {
 
   &__item {
     background-color: var(--color-background);
-    width: 80px;
-    height: 80px;
-    border-radius: 10px;
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
     box-sizing: border-box;
     outline: none;
     flex-shrink: 0;
-    padding: 10px;
+    padding: 0px;
 
     &:not(:first-child) {
       margin-left: 10px;

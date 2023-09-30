@@ -105,7 +105,6 @@ function clear(): void {
     padding: 0;
 
     &::placeholder {
-      /* color: var(--color-text); */
       color: var(--color-text-secondary);
       opacity: 0.5;
     }

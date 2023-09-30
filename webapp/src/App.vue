@@ -28,5 +28,6 @@ onMounted(() => {
   margin-left: auto;
   margin-right: auto;
   background: var(--color-background);
+  min-height: 100vh;
 }
 </style>

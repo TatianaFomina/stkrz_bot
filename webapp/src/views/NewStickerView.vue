@@ -1,82 +1,46 @@
 <template>
   <div class="new-sticker">
-    <ImagePreview
-      v-if="text"
-      class="new-sticker__preview"
-      :text="text"
-      :text-size="textSize"
-      :stroke-size="strokeSize"
-      :font="font"
-      @update="onImageDataUpdate"
-    />
+    <div class="new-sticker__gallery">
+      <ImagePreview
+        v-if="text"
+        class="new-sticker__preview"
+        :text="text"
+        :text-size="textSize"
+        :stroke-size="strokeSize"
+        :font="font"
+        @update="onImageDataUpdate"
+      />
 
-    <EmptyPreview
-      v-else
-      class="new-sticker__empty"
-    />
+      <EmptyPreview
+        v-else
+        class="new-sticker__empty"
+      />
+    </div>
 
     <Textarea
       v-model="text"
       class="new-sticker__input"
       :placeholder="t('editor.text_placeholder')"
+      :hint=" t('editor.text_prompt')"
     />
 
-    <p class="new-sticker__input-hint">
-      {{ t('editor.text_prompt') }}
-    </p>
-
-    <div class="new-sticker__size-input">
-      <p class="new-sticker__size-small">
-        A
-      </p>
-
-      <Slider
-        v-model="textSize"
-        class="new-sticker__slider"
-        :min="72"
-        :max="136"
-        :step="8"
-      />
-
-      <p class="new-sticker__size-big">
-        A
-      </p>
-    </div>
-
-    <p class="new-sticker__input-hint">
-      {{ t('editor.size_hint') }}
-    </p>
+    <Toolbar v-model="currentTab" />
 
     <FontSelector
+      v-show="currentTab === 'font'"
       v-model="font"
       class="new-sticker__font-selector"
     />
 
-    <p class="new-sticker__input-hint">
-      {{ t('editor.style_prompt') }}
-    </p>
+    <StrokeSizeInput
+      v-if="currentTab === 'stroke'"
+      v-model="strokeSize"
+    />
 
-    <div class="new-sticker__stroke-size-input">
-      <p class="new-sticker__stroke-size-small">
-        0
-      </p>
-
-      <Slider
-        v-model="strokeSize"
-        class="new-sticker__slider"
-        :min="0"
-        :max="40"
-        :step="8"
-      />
-
-      <p class="new-sticker__stroke-size-big">
-        Max
-      </p>
-    </div>
-
-    <p class="new-sticker__input-hint">
-      {{ t('editor.stroke_hint') }}
-    </p>
+    <TextSizeInput
+      v-if="currentTab === 'size'"
+      v-model="textSize"
+    />
   </div>
 </template>
 
@@ -87,11 +51,14 @@ import { useTelegramWebApp, useTelegramWebAppBackButton, useTelegramWebAppMainBu
 import { useStore } from '../services/useStore';
 import ImagePreview from '../components/ImagePreview.vue';
 import EmptyPreview from '../components/EmptyPreview.vue';
-import Slider from '../components/Slider.vue';
 import FontSelector from '../components/FontSelector.vue';
 import { Font } from '../services/useFonts';
-import Textarea from '../components/Textarea.vue';
+import Textarea from '../components/textarea';
 import { useLocale } from '../services/useLocale';
+import Toolbar from '../components/toolbar/Toolbar.vue';
+import { Tool } from '../components/toolbar/Tool';
+import TextSizeInput from '../components/TextSizeInput.vue';
+import StrokeSizeInput from '../components/StrokeSizeInput.vue';
 
 const {
   impactOccurred,
@@ -129,6 +96,7 @@ const textSize = ref<number>(104);
 const strokeSize = ref<number>(24);
 const font = ref<Font>(Font.Kosko);
 const imageData = ref<Blob | null>(null);
+const currentTab = ref<Tool>('font');
 
 onMounted(async () => {
   setMainButtonText(props.back ? t('editor.add') : t('editor.create'));
@@ -189,16 +157,12 @@ function onImageDataUpdate(data: Blob | null): void {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px;
-
-  & > *:not(:first-child) {
-    margin-top: 28px;
-  }
 
   &__preview, &__empty {
     width: 200px;
     height: 200px;
     box-sizing: border-box;
+    background-color: var(--color-background);
   }
 
   &__empty {
@@ -208,66 +172,21 @@ function onImageDataUpdate(data: Blob | null): void {
 
   &__input {
     align-self: stretch;
-  }
-
-  &__input-hint {
-    color: var(--color-text-secondary);
-    font-size: 14px;
-    margin-top: 6px !important;
-    align-self: start;
-    margin-left: 12px;
-  }
-
-  &__size-input {
-    background-color: var(--color-background-secondary);
-    border-radius: 10px;
-    align-self: stretch;
-    display: flex;
-    align-items: center;
-    padding: 16px 14px;
-  }
-
-  &__slider {
-    flex: 1;
-  }
-
-  &__size-small {
-    color: var(--color-text-secondary);
-    font-size: 16px;
-    line-height: 16px;
-    margin-right: 16px;
-  }
-
-  &__size-big {
-    color: var(--color-text-secondary);
-    font-size: 28px;
-    line-height: 24px;
-    margin-left: 16px;
+    margin-left: 17px;
+    margin-right: 17px;
+    margin-bottom: 28px;
+    margin-top: 28px;
   }
 
   &__font-selector {
     align-self: stretch;
   }
 
-  &__stroke-size-input {
-    align-self: stretch;
+  &__gallery {
+    width: 100%;
     background-color: var(--color-background-secondary);
-    border-radius: 10px;
-    padding: 16px 14px;
     display: flex;
-    align-items: center;
-  }
-
-  &__stroke-size-small {
-    color: var(--color-text-secondary);
-    margin-right: 16px;
-    font-weight: 500;
-  }
-
-  &__stroke-size-big {
-    color: var(--color-text-secondary);
-    margin-left: 16px;
-    font-weight: 500;
+    justify-content: center;
   }
 
 }
