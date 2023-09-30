@@ -1,9 +1,9 @@
 
 :root {
-  --color-background: var(--tg-theme-bg-color);
-  --color-background-secondary: var(--tg-theme-secondary-bg-color, grey);
+  --color-background: var(--tg-theme-bg-color, #1A222C);
+  --color-background-secondary: var(--tg-theme-secondary-bg-color, #131415);
   --color-text: var(--tg-theme-text-color, white);
-  --color-text-secondary: var(--tg-theme-hint-color, grey);
-  --color-accent: var(--tg-theme-button-color, blue);
+  --color-text-secondary: var(--tg-theme-hint-color, #B4C2D3);
+  --color-accent: var(--tg-theme-button-color, #55A4F8);
   --color-link: var(--tg-theme-link-color, rgb(67, 123, 208));
 }
