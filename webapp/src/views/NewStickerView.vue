@@ -115,7 +115,6 @@ onUnmounted(() => {
   removeMainButtonClickHandler(onClick);
   removeBackButtonClickHandler(onBackClick);
   hideBackButton();
-  hideMainButton();
 });
 
 /**
@@ -188,19 +187,16 @@ function onImageDataUpdate(data: Blob | null): void {
   }
 
   &__gallery {
-    /* padding: 7px 0; */
     padding: 17px 0;
     width: 100%;
     background-color: var(--color-background-secondary);
     display: flex;
     align-items: center;
     justify-content: center;
-    /* flex-shrink: 1; */
     flex: 1;
   }
 
   &__tools {
-    /* flex: 1; */
     align-self: stretch;
   }
 

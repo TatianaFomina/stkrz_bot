@@ -23,7 +23,9 @@
 </script>
 
 <style lang="postcss">
+.new-sticker__empty {
   svg {
     opacity: 0.5;
   }
+}
 </style>

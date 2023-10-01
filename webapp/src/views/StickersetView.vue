@@ -19,38 +19,47 @@
           <Cross />
         </button>
       </div>
+
+      <div
+        v-if="stickers.length === 0"
+        class="stickerset-view__empty"
+      >
+        {{ t('stickers_view.empty') }}
+      </div>
     </div>
 
-    <button
-      v-if="stickers.length <= maxStickers"
-      class="stickerset-view__add"
-      @click="addNewSticker"
-    >
-      <PlusIcon />
-      {{ t('stickers_view.add_sticker') }}
-    </button>
+    <div class="stickerset-view__settings">
+      <button
+        v-if="stickers.length <= maxStickers"
+        class="stickerset-view__add"
+        @click="addNewSticker"
+      >
+        <PlusIcon />
+        {{ t('stickers_view.add_sticker') }}
+      </button>
 
-    <p
-      v-else
-      class="stickerset-view__message"
-    >
-      <span v-html="t('stickers_view.max_exceeded')" />
-    </p>
+      <p
+        v-else
+        class="stickerset-view__message"
+      >
+        <span v-html="t('stickers_view.max_exceeded')" />
+      </p>
 
-    <Input
-      v-model="stickersetTitle"
-      class="stickerset-view__input"
-      :placeholder="t('stickers_view.title_placeholder')"
-      :hint="t('stickers_view.title_hint')"
-    />
+      <Input
+        v-model="stickersetTitle"
+        class="stickerset-view__input"
+        :placeholder="t('stickers_view.title_placeholder')"
+        :hint="t('stickers_view.title_hint')"
+      />
 
-    <Input
-      v-model="stickersetName"
-      pattern="[^-A-Za-z]"
-      class="stickerset-view__input"
-      :placeholder="t('stickers_view.name_placeholder')"
-      :hint="t('stickers_view.name_hint')"
-    />
+      <Input
+        v-model="stickersetName"
+        pattern="[^-A-Za-z]"
+        class="stickerset-view__input"
+        :placeholder="t('stickers_view.name_placeholder')"
+        :hint="t('stickers_view.name_hint')"
+      />
+    </div>
   </div>
 </template>
 
@@ -64,6 +73,7 @@ import { Sticker } from '../types/sticker';
 import { useStore } from '../services/useStore';
 import { useServer } from '../services/useServer';
 import { useLocale } from '../services/useLocale';
+import { useRandom } from '../services/useRandom';
 import Cross from '../icons/Cross.vue';
 
 const {
@@ -74,13 +84,12 @@ const {
 } = useTelegramWebApp();
 
 const {
-  showMainButton,
-  hideMainButton,
   setMainButtonText,
   addMainButtonClickHandler,
   removeMainButtonClickHandler,
   showProgress,
   hideProgress,
+  setMainButtonActive,
 } = useTelegramWebAppMainButton();
 
 const router = useRouter();
@@ -90,8 +99,10 @@ const { t } = useLocale();
 const { getStickers, setStickers, getTitle, setTitle, getName, setName } = useStore();
 const { createStickerset, checkStickersetName } = useServer();
 
-const stickersetTitle = ref<string | null | undefined>();
-const stickersetName = ref<string | null | undefined>();
+const { getRandomName, getRandomTitle } = useRandom();
+
+const stickersetTitle = ref<string | null | undefined>(getRandomTitle());
+const stickersetName = ref<string | null | undefined>(getRandomName());
 const stickers = ref<Sticker[]>([]);
 const maxStickers = 50;
 
@@ -106,6 +117,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   removeMainButtonClickHandler(submit);
+  setMainButtonActive(true);
 });
 
 watch(stickersetTitle, value => {
@@ -113,7 +125,7 @@ watch(stickersetTitle, value => {
     return;
   }
   setTitle(value);
-});
+}, { immediate: true });
 
 watch(stickersetName, value => {
   if (typeof value !== 'string') {
@@ -121,25 +133,25 @@ watch(stickersetName, value => {
   }
 
   setName(value);
-});
+}, { immediate: true });
 
 watch([stickers, stickersetName, stickersetTitle], () => {
   if (stickers.value.length === 0) {
-    hideMainButton();
+    setMainButtonActive(false);
     return;
   }
 
   if (stickersetName.value === null || stickersetName.value === undefined || stickersetName.value.length === 0) {
-    hideMainButton();
+    setMainButtonActive(false);
     return;
   }
 
   if (stickersetTitle.value === null || stickersetTitle.value === undefined || stickersetTitle.value.length === 0) {
-    hideMainButton();
+    setMainButtonActive(false);
     return;
   }
 
-  showMainButton();
+  setMainButtonActive(true);
 });
 
 function addNewSticker(): void {
@@ -195,17 +207,32 @@ function getUrl(data: Blob): string {
 
 <style lang="postcss">
 .stickerset-view {
-  padding: 16px;
 
   &__stickers {
-    width: 100%;
+    --padding: 17px;
+
+    width: calc(100% - var(--padding) * 2);
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
+    gap: var(--padding);
+    background-color: var(--color-background-secondary);
+    padding: 34px var(--padding);
+    flex: 1;
+  }
+
+  &__empty {
+    grid-column: 1 / 4;
+    text-align: center;
+    color: var(--color-text-secondary);
+    opacity: 0.5;
   }
 
   &__item {
     position: relative;
+    background-color: var(--color-background);
+    border-radius: 10px;
+    box-shadow: 0px 6px 12px 0px rgba(0, 0, 0, 0.10), 0px 0px 5px 0px rgba(0, 0, 0, 0.10);
+    aspect-ratio: 1 / 1;
   }
 
   &__item-image {
@@ -214,36 +241,47 @@ function getUrl(data: Blob): string {
     max-height: 100%;
   }
 
-  & > *:not(:first-child) {
+  &__settings {
     margin-top: 28px;
+    padding: 0 17px;
+
+    & > *:not(:first-child) {
+      margin-top: 28px;
+    }
   }
 
   &__delete-item {
-    background: var(--color-text-secondary);
-    color: var(--color-background-secondary);
-    border-radius: 12px;
-    width: 16px;
-    height: 16px;
+    background:  var(--color-background-secondary);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    border-radius: 100%;
+    flex-shrink: 0;
+    align-self: center;
     display: flex;
     align-items: center;
     justify-content: center;
     position: absolute;
-    top: -6px;
-    right: -6px;
+    top: -10px;
+    right: -8px;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    svg {
+      width: 28px;
+      height: 28px;
+    }
   }
 
   &__add {
     background-color: transparent;
     color: var(--color-link);
-    font-size: 14px;
+    font-size: 15px;
     display: flex;
     align-items: center;
     margin: 0 auto;
 
     svg {
-      width: 18px;
-      height: 18px;
-      margin-right: 4px;
+      margin-right: 3px;
     }
   }
 
@@ -251,5 +289,6 @@ function getUrl(data: Blob): string {
     text-align: center;
     color: var(--color-text-secondary);
   }
+
 }
 </style>

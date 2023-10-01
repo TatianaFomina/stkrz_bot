@@ -26,11 +26,12 @@ export type Platform = 'macos' | 'ios' | 'android' | 'web' | 'unknown';
 
 interface MainButton {
   text: string;
+  color: string;
   show: () => void;
   hide: () => void;
   onClick: (cb: () => void) => void;
   offClick: (cb: () => void) => void;
-  setParams: (params: { is_active: boolean }) => void;
+  setParams: (params: { is_active: boolean; color?: string }) => void;
   showProgress: () => void;
   hideProgress: () => void;
 }
@@ -110,6 +111,9 @@ export function useTelegramWebAppMainButton(): {
   showProgress: () => void;
   hideProgress: () => void;
 } {
+  const defaultColor = tgWebApp?.MainButton.color;
+  const disabledColor = '#a7a7a7';
+
   /**
    * Shows main Web App button
    */
@@ -159,6 +163,7 @@ export function useTelegramWebAppMainButton(): {
   function setMainButtonActive(isActive: boolean): void {
     tgWebApp?.MainButton.setParams({
       is_active: isActive,
+      color: isActive ? defaultColor : disabledColor,
     });
   }
 
