@@ -1,13 +1,14 @@
 <template>
   <div class="font-selector">
     <button
-      v-for="font in fonts"
+      v-for="(font, i) of fonts"
+      ref="buttons"
       :key="font.name"
       :class="[
         'font-selector__item',
         modelValue === font.name && 'font-selector__item--active'
       ]"
-      @click="onSelect(font.name)"
+      @click="onSelect(i, font.name)"
     >
       <img
         :src="font.image"
@@ -18,6 +19,7 @@
 </template>
 
 <script lang='ts' setup>
+import { ref, nextTick } from 'vue';
 import { Font } from '../services/useFonts';
 
 defineProps<{
@@ -26,16 +28,32 @@ defineProps<{
 
 const emit = defineEmits<{(eventName: 'update:modelValue', value: Font): void }>();
 
+const buttons = ref<HTMLElement[]>([]);
+
 const fonts = [
   { name: Font.Kosko, image: new URL('../assets/font-previews/Kosko.png', import.meta.url).href },
   { name: Font.Airfool, image: new URL('../assets/font-previews/Airfool.png', import.meta.url).href },
   { name: Font.Durik, image: new URL('../assets/font-previews/Durik.png', import.meta.url).href },
   { name: Font.Shadow, image: new URL('../assets/font-previews/Shadow.png', import.meta.url).href },
   { name: Font.Swampy, image: new URL('../assets/font-previews/Swampy.png', import.meta.url).href },
+
 ];
 
-function onSelect(fontName: Font): void {
+async function onSelect(i: number, fontName: Font): Promise<void> {
   emit('update:modelValue', fontName);
+
+  await nextTick();
+
+  animate(i);
+}
+
+function animate(index: number) {
+  const el = buttons.value[index];
+
+  el.classList.add('font-selector__item--animating');
+  el.addEventListener('animationend', () => {
+    el.classList.remove('font-selector__item--animating');
+  }, { once: true });
 }
 </script>
 
@@ -70,7 +88,9 @@ function onSelect(fontName: Font): void {
 
     &--active {
       border: 2px solid var(--color-accent);
+    }
 
+    &--animating {
       .font-selector__item-image {
         animation: 250ms scale;
       }

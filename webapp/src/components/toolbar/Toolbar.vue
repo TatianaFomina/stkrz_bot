@@ -21,7 +21,7 @@ import IconFont from '../../icons/Font.vue';
 import IconFontSize from '../../icons/FontSize.vue';
 import IconThinLine from '../../icons/ThinLine.vue';
 import IconPalette from '../../icons/Palette.vue';
-import IconSettings from '../../icons/Settings.vue';
+// import IconSettings from '../../icons/Settings.vue';
 
 const props = defineProps<{
   modelValue: Tool;
@@ -46,10 +46,10 @@ const tools = [
     label: 'Color',
     icon: IconPalette,
   },
-  {
-    label: 'Settings',
-    icon: IconSettings,
-  },
+  // {
+  //   label: 'Settings',
+  //   icon: IconSettings,
+  // },
 ];
 
 function isActive(tool: { label: string }): boolean {
@@ -62,15 +62,14 @@ function onToolClick(tool: { label: string }): void {
 </script>
 
 <style lang="postcss">
-.toolbar {
+  .toolbar {
     width: calc(100% - 17px * 2);
     background-color: var(--color-background-secondary);
     display: flex;
     padding: 10px 17px;
-    padding-bottom: 17px;
+    padding-bottom: 36px;
     justify-content: space-around;
-    position: sticky;
-    bottom: 0;
+    border-top: 1px rgba(128, 128, 128, 0.213) solid;
 
     &__tool {
       display: flex;
@@ -91,7 +90,7 @@ function onToolClick(tool: { label: string }): void {
     &__tool-label {
       font-size: 12px;
       text-align: center;
-      margin-top: 5px;
+      margin-top: 7px;
     }
 
   }

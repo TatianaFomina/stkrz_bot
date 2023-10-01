@@ -17,30 +17,32 @@
       />
     </div>
 
-    <Textarea
-      v-model="text"
-      class="new-sticker__input"
-      :placeholder="t('editor.text_placeholder')"
-      :hint=" t('editor.text_prompt')"
-    />
+    <div class="new-sticker__tools">
+      <Textarea
+        v-model="text"
+        class="new-sticker__input"
+        :placeholder="t('editor.text_placeholder')"
+        :hint=" t('editor.text_prompt')"
+      />
 
-    <Toolbar v-model="currentTab" />
+      <FontSelector
+        v-show="currentTab === 'font'"
+        v-model="font"
+        class="new-sticker__font-selector"
+      />
 
-    <FontSelector
-      v-show="currentTab === 'font'"
-      v-model="font"
-      class="new-sticker__font-selector"
-    />
+      <StrokeSizeInput
+        v-if="currentTab === 'stroke'"
+        v-model="strokeSize"
+      />
 
-    <StrokeSizeInput
-      v-if="currentTab === 'stroke'"
-      v-model="strokeSize"
-    />
+      <TextSizeInput
+        v-if="currentTab === 'size'"
+        v-model="textSize"
+      />
 
-    <TextSizeInput
-      v-if="currentTab === 'size'"
-      v-model="textSize"
-    />
+      <Toolbar v-model="currentTab" />
+    </div>
   </div>
 </template>
 
@@ -154,15 +156,18 @@ function onImageDataUpdate(data: Blob | null): void {
 
 <style lang="postcss">
 .new-sticker {
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
 
   &__preview, &__empty {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     box-sizing: border-box;
     background-color: var(--color-background);
+    border-radius: 10px;
+    box-shadow: 0px 6px 12px 0px rgba(0, 0, 0, 0.10), 0px 0px 5px 0px rgba(0, 0, 0, 0.10);
   }
 
   &__empty {
@@ -183,10 +188,20 @@ function onImageDataUpdate(data: Blob | null): void {
   }
 
   &__gallery {
+    /* padding: 7px 0; */
+    padding: 17px 0;
     width: 100%;
     background-color: var(--color-background-secondary);
     display: flex;
+    align-items: center;
     justify-content: center;
+    /* flex-shrink: 1; */
+    flex: 1;
+  }
+
+  &__tools {
+    /* flex: 1; */
+    align-self: stretch;
   }
 
 }

@@ -17,6 +17,6 @@ export default {
     stroke_hint: 'Choose stroke size',
     add: 'ADD',
     create: 'CREATE STICKER',
-    start_text: 'Hey You Lazy',
+    start_text: 'Cool',
   },
 };

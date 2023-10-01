@@ -23,5 +23,7 @@
 </script>
 
 <style lang="postcss">
-
+  svg {
+    opacity: 0.5;
+  }
 </style>

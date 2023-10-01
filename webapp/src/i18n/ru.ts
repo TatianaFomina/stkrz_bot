@@ -17,6 +17,6 @@ export default {
     stroke_hint: 'Выберите размер обводки',
     add: 'ДОБАВИТЬ',
     create: 'СОЗДАТЬ СТИКЕР',
-    start_text: 'Эй ленивец',
+    start_text: 'Балдёж',
   },
 };
