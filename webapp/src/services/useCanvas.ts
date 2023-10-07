@@ -8,11 +8,17 @@ interface TextParams {
   font: Font;
   fontSize: number;
   strokeSize: number;
+  fontColor: string;
 }
 
 export function useCanvas(canvas: Ref<HTMLCanvasElement | null>): UseCanvas {
   const { load, exists } = useFonts();
 
+  /**
+   * Renders specified text on canvas
+   * @param text - text to render
+   * @param params - text params
+   */
   async function displayText(text: string, params: TextParams): Promise<void> {
     if (canvas.value === null) {
       return;
@@ -32,7 +38,7 @@ export function useCanvas(canvas: Ref<HTMLCanvasElement | null>): UseCanvas {
 
     ctx.textAlign = 'center';
     ctx.font = `${params.fontSize}px ${params.font}`;
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = params.fontColor;
     ctx.strokeStyle = 'white';
     ctx.lineWidth = params.strokeSize;
     ctx.lineJoin = 'round';

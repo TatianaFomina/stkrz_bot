@@ -37,6 +37,11 @@ const props = withDefaults(defineProps<{
    * Canvas size in pixels
    */
   size?: number;
+
+  /**
+   * Color of the text
+   */
+  textColor: string;
 }>(), {
   text: 'Sample text',
   size: 512,
@@ -55,12 +60,17 @@ onMounted(async () => {
   await updateImage();
 });
 
-watch(() => [props.text, props.textSize, props.font, props.strokeSize], async () => {
+watch(() => [props.text, props.textSize, props.font, props.strokeSize, props.textColor], async () => {
   await updateImage();
 }, { immediate: true });
 
 async function updateImage(): Promise<void> {
-  await displayText(props.text, { font: props.font, fontSize: props.textSize, strokeSize: props.strokeSize });
+  await displayText(props.text, {
+    font: props.font,
+    fontSize: props.textSize,
+    strokeSize: props.strokeSize,
+    fontColor: props.textColor,
+  });
 
   setTimeout(async () => {
     const data = await getImageData();

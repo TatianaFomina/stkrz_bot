@@ -36,7 +36,6 @@ const fonts = [
   { name: Font.Durik, image: new URL('../assets/font-previews/Durik.png', import.meta.url).href },
   { name: Font.Shadow, image: new URL('../assets/font-previews/Shadow.png', import.meta.url).href },
   { name: Font.Swampy, image: new URL('../assets/font-previews/Swampy.png', import.meta.url).href },
-
 ];
 
 async function onSelect(i: number, fontName: Font): Promise<void> {

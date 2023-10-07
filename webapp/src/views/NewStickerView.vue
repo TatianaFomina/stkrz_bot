@@ -8,6 +8,7 @@
         :text-size="textSize"
         :stroke-size="strokeSize"
         :font="font"
+        :text-color="textColor"
         @update="onImageDataUpdate"
       />
 
@@ -41,6 +42,11 @@
         v-model="textSize"
       />
 
+      <ColorSelector
+        v-if="currentTab === 'color'"
+        v-model="textColor"
+      />
+
       <Toolbar v-model="currentTab" />
     </div>
   </div>
@@ -61,6 +67,7 @@ import Toolbar from '../components/toolbar/Toolbar.vue';
 import { Tool } from '../components/toolbar/Tool';
 import TextSizeInput from '../components/TextSizeInput.vue';
 import StrokeSizeInput from '../components/StrokeSizeInput.vue';
+import ColorSelector from '../components/ColorSelector.vue';
 
 const {
   impactOccurred,
@@ -97,6 +104,7 @@ const text = ref<string>(t('editor.start_text'));
 const textSize = ref<number>(104);
 const strokeSize = ref<number>(24);
 const font = ref<Font>(Font.Kosko);
+const textColor = ref<string>('black');
 const imageData = ref<Blob | null>(null);
 const currentTab = ref<Tool>('font');
 
