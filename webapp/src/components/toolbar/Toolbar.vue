@@ -21,7 +21,6 @@ import IconFont from '../../icons/Font.vue';
 import IconFontSize from '../../icons/FontSize.vue';
 import IconThinLine from '../../icons/ThinLine.vue';
 import IconPalette from '../../icons/Palette.vue';
-// import IconSettings from '../../icons/Settings.vue';
 
 const props = defineProps<{
   modelValue: Tool;
@@ -35,6 +34,10 @@ const tools = [
     icon: IconFont,
   },
   {
+    label: 'Color',
+    icon: IconPalette,
+  },
+  {
     label: 'Size',
     icon: IconFontSize,
   },
@@ -42,14 +45,6 @@ const tools = [
     label: 'Stroke',
     icon: IconThinLine,
   },
-  {
-    label: 'Color',
-    icon: IconPalette,
-  },
-  // {
-  //   label: 'Settings',
-  //   icon: IconSettings,
-  // },
 ];
 
 function isActive(tool: { label: string }): boolean {

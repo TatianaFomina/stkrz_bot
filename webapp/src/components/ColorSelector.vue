@@ -61,8 +61,8 @@ function onSelect(color: string): void {
 
   &__item {
     background-color: var(--color-background-secondary);
-    width: 60px;
-    height: 60px;
+    width: 52px;
+    height: 52px;
     border-radius: 100%;
     box-sizing: border-box;
     outline: none;

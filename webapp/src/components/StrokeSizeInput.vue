@@ -35,7 +35,7 @@ function onChange(event: InputEvent): void {
   .stroke-size-input {
     align-self: stretch;
     background-color: var(--color-background-secondary);
-    padding: 24px 17px;
+    padding: 20px 17px;
     display: flex;
     align-items: center;
 

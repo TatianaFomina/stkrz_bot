@@ -31,8 +31,8 @@ const emit = defineEmits<{(eventName: 'update:modelValue', value: Font): void }>
 const buttons = ref<HTMLElement[]>([]);
 
 const fonts = [
-  { name: Font.Kosko, image: new URL('../assets/font-previews/Kosko.png', import.meta.url).href },
   { name: Font.Airfool, image: new URL('../assets/font-previews/Airfool.png', import.meta.url).href },
+  { name: Font.Kosko, image: new URL('../assets/font-previews/Kosko.png', import.meta.url).href },
   { name: Font.Durik, image: new URL('../assets/font-previews/Durik.png', import.meta.url).href },
   { name: Font.Shadow, image: new URL('../assets/font-previews/Shadow.png', import.meta.url).href },
   { name: Font.Swampy, image: new URL('../assets/font-previews/Swampy.png', import.meta.url).href },
@@ -73,8 +73,8 @@ function animate(index: number) {
 
   &__item {
     background-color: var(--color-background);
-    width: 60px;
-    height: 60px;
+    width: 52px;
+    height: 52px;
     border-radius: 100%;
     box-sizing: border-box;
     outline: none;

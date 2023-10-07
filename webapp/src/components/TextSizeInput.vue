@@ -41,7 +41,7 @@ function onChange(event: InputEvent): void {
     align-self: stretch;
     display: flex;
     align-items: center;
-    padding: 24px 17px;
+    padding: 20px 17px;
 
     &__slider {
       flex: 1;
