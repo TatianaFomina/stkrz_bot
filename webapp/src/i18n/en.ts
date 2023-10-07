@@ -11,7 +11,7 @@ export default {
     empty: 'Empty stickerpack',
   },
   editor: {
-    text_prompt: 'Enter text you wish to see on the sticker',
+    text_prompt: 'Text that will be displayed on the sticker',
     text_placeholder: 'Text',
     style_prompt: 'Select text style',
     size_hint: 'Choose text size',
@@ -19,5 +19,12 @@ export default {
     add: 'ADD',
     create: 'CREATE STICKER',
     start_text: 'Cool',
+    empty: 'No text to display...',
+    tools: {
+      font: 'Font',
+      color: 'Color',
+      size: 'Size',
+      stroke: 'Stroke',
+    },
   },
 };

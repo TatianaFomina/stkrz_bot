@@ -11,6 +11,7 @@
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
+    "lottie-web-vue": "^2.0.7",
     "nanoid": "^4.0.2",
     "postcss": "^8.4.23",
     "postcss-apply": "^0.12.0",

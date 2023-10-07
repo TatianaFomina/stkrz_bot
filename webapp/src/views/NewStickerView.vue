@@ -164,22 +164,15 @@ function onImageDataUpdate(data: Blob | null): void {
 <style lang="postcss">
 .new-sticker {
   height: 100vh;
+  height: var(--tg-viewport-height);
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  &__preview, &__empty {
+  &__preview {
     width: 150px;
     height: 150px;
     box-sizing: border-box;
-    background-color: var(--color-background);
-    border-radius: 10px;
-    box-shadow: 0px 6px 12px 0px rgba(0, 0, 0, 0.10), 0px 0px 5px 0px rgba(0, 0, 0, 0.10);
-  }
-
-  &__empty {
-    color: var(--color-text-secondary);
-    padding: 30px;
   }
 
   &__input {
@@ -195,7 +188,6 @@ function onImageDataUpdate(data: Blob | null): void {
   }
 
   &__gallery {
-    padding: 17px 0;
     width: 100%;
     background-color: var(--color-background-secondary);
     display: flex;

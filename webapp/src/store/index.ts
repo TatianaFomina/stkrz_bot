@@ -1,3 +1,4 @@
+import { useRandom } from '../services/useRandom';
 import { type Sticker } from '../types/sticker';
 
 interface Store {
@@ -5,8 +6,11 @@ interface Store {
   name: string | null;
   stickers: Sticker[];
 }
+
+const { getRandomName, getRandomTitle } = useRandom();
+
 export const store: Store = {
-  title: null,
-  name: null,
+  title: getRandomTitle(),
+  name: getRandomName(),
   stickers: [],
 };

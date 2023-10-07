@@ -6,4 +6,6 @@
   --color-text-secondary: var(--tg-theme-hint-color, #B4C2D3);
   --color-accent: var(--tg-theme-button-color, #55A4F8);
   --color-link: var(--tg-theme-link-color, rgb(67, 123, 208));
+
+  --font-size-default: 15px;
 }

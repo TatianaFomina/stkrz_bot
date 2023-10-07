@@ -73,7 +73,6 @@ import { Sticker } from '../types/sticker';
 import { useStore } from '../services/useStore';
 import { useServer } from '../services/useServer';
 import { useLocale } from '../services/useLocale';
-import { useRandom } from '../services/useRandom';
 import Cross from '../icons/Cross.vue';
 
 const {
@@ -99,10 +98,8 @@ const { t } = useLocale();
 const { getStickers, setStickers, getTitle, setTitle, getName, setName } = useStore();
 const { createStickerset, checkStickersetName } = useServer();
 
-const { getRandomName, getRandomTitle } = useRandom();
-
-const stickersetTitle = ref<string | null | undefined>(getRandomTitle());
-const stickersetName = ref<string | null | undefined>(getRandomName());
+const stickersetTitle = ref<string | null | undefined>();
+const stickersetName = ref<string | null | undefined>();
 const stickers = ref<Sticker[]>([]);
 const maxStickers = 50;
 
@@ -276,7 +273,7 @@ function getUrl(data: Blob): string {
   &__add {
     background-color: transparent;
     color: var(--color-link);
-    font-size: 15px;
+    font-size: var(--font-size-default);
     display: flex;
     align-items: center;
     margin: 0 auto;

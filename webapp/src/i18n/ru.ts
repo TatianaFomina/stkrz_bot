@@ -19,5 +19,12 @@ export default {
     add: 'ДОБАВИТЬ',
     create: 'СОЗДАТЬ СТИКЕР',
     start_text: 'Балдёж',
+    empty: 'Пусто...',
+    tools: {
+      font: 'Шрифт',
+      color: 'Цвет',
+      size: 'Размер',
+      stroke: 'Обводка',
+    },
   },
 };

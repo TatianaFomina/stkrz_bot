@@ -39,7 +39,11 @@ const props = defineProps<{
   hint?: string;
 }>();
 
-const emit = defineEmits<{(eventName: 'update:modelValue', value: string): void }>();
+/* eslint-disable-next-line func-call-spacing */
+const emit = defineEmits<{
+  (eventName: 'update:modelValue', value: string): void;
+  (eventName: 'clear'): void;
+}>();
 
 const input = ref< HTMLInputElement | null >(null);
 
@@ -70,6 +74,7 @@ function validate(event: KeyboardEvent): void {
 
 function clear(): void {
   emit('update:modelValue', '');
+  emit('clear');
   input.value?.focus();
 }
 </script>

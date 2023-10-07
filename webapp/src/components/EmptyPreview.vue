@@ -1,31 +1,54 @@
 <template>
   <div
-    class="new-sticker__empty"
+    class="empty-preview"
   >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="currentColor"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
+    <LottieAnimation
+      class="empty-preview__animation"
+      :animation-data="EyesAnimation"
+      :auto-play="true"
+      :loop="true"
+      :speed="1"
+    />
+    <p class="empty-preview__title">
+      {{ t('editor.empty') }}
+    </p>
   </div>
 </template>
 
 <script lang='ts' setup>
+import { LottieAnimation } from 'lottie-web-vue';
+import EyesAnimation from '../assets/animations/eyes.json';
+import { useLocale } from '../services/useLocale';
 
+const { t } = useLocale();
 </script>
 
 <style lang="postcss">
-.new-sticker__empty {
-  svg {
-    opacity: 0.5;
+.empty-preview {
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px 50px;
+  height: 150px;
+  box-sizing: border-box;
+
+  &__title {
+    font-weight: 500;
+    font-size: 16px;
+    margin-top: 12px;
+
+  }
+
+  &__subtitle {
+    font-size: var(--font-size-default);
+    margin-top: 4px;
+  }
+
+  &__animation {
+    width: 90px;
+    height: 90px;
   }
 }
 </style>

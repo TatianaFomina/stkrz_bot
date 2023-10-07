@@ -21,6 +21,8 @@ import IconFont from '../../icons/Font.vue';
 import IconFontSize from '../../icons/FontSize.vue';
 import IconThinLine from '../../icons/ThinLine.vue';
 import IconPalette from '../../icons/Palette.vue';
+import { computed } from 'vue';
+import { useLocale } from '../../services/useLocale';
 
 const props = defineProps<{
   modelValue: Tool;
@@ -28,31 +30,37 @@ const props = defineProps<{
 
 const emit = defineEmits<{(eventName: 'update:modelValue', value: Tool): void }>();
 
-const tools = [
+const { t } = useLocale();
+
+const tools = computed(() => [
   {
-    label: 'Font',
+    label: t('editor.tools.font'),
+    name: 'font',
     icon: IconFont,
   },
   {
-    label: 'Color',
+    label: t('editor.tools.color'),
+    name: 'color',
     icon: IconPalette,
   },
   {
-    label: 'Size',
+    label: t('editor.tools.size'),
+    name: 'size',
     icon: IconFontSize,
   },
   {
-    label: 'Stroke',
+    label: t('editor.tools.stroke'),
+    name: 'stroke',
     icon: IconThinLine,
   },
-];
+]);
 
-function isActive(tool: { label: string }): boolean {
-  return tool.label.toLowerCase() === props.modelValue;
+function isActive(tool: { name: string }): boolean {
+  return tool.name === props.modelValue;
 }
 
-function onToolClick(tool: { label: string }): void {
-  emit('update:modelValue', tool.label.toLowerCase() as Tool);
+function onToolClick(tool: { name: string }): void {
+  emit('update:modelValue', tool.name as Tool);
 }
 </script>
 
