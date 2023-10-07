@@ -164,6 +164,7 @@ function deleteSticker(sticker: Sticker): void {
   stickers.value = stickers.value.filter(item => item.data !== sticker.data);
 
   setStickers(stickers.value);
+  impactOccurred('light');
 }
 
 async function submit(): Promise<void> {

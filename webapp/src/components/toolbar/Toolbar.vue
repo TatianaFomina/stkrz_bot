@@ -35,12 +35,12 @@ const tools = [
     icon: IconFont,
   },
   {
-    label: 'Stroke',
-    icon: IconThinLine,
-  },
-  {
     label: 'Size',
     icon: IconFontSize,
+  },
+  {
+    label: 'Stroke',
+    icon: IconThinLine,
   },
   {
     label: 'Color',
@@ -67,7 +67,7 @@ function onToolClick(tool: { label: string }): void {
     background-color: var(--color-background-secondary);
     display: flex;
     padding: 10px 17px;
-    padding-bottom: 36px;
+    padding-bottom: 12px;
     justify-content: space-around;
     border-top: 1px rgba(128, 128, 128, 0.213) solid;
 
