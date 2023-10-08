@@ -8,6 +8,8 @@
         :value="modelValue"
         :placeholder="placeholder"
         @keyup="onInput"
+        @blur="emit('blur')"
+        @focus="emit('focus')"
       />
 
       <button
@@ -42,7 +44,13 @@ const props = withDefaults(defineProps<{
   hint: '',
 });
 
-const emit = defineEmits<{(eventName: 'update:modelValue', value: string): void }>();
+/* eslint-disable-next-line func-call-spacing */
+const emit = defineEmits<{
+  (eventName: 'update:modelValue', value: string): void;
+  (eventName: 'clear'): void;
+  (eventName: 'blur'): void;
+  (eventName: 'focus'): void;
+}>();
 
 const textarea = ref< HTMLTextAreaElement | null >(null);
 
@@ -73,10 +81,19 @@ function clear(): void {
   }
 
   emit('update:modelValue', '');
-  textarea.value.focus();
+  emit('clear');
+  // textarea.value.focus();
 
   textarea.value.style.height = ''; /* Reset the height */
 }
+
+function blur(): void {
+  textarea.value?.blur();
+}
+
+defineExpose({
+  blur,
+});
 </script>
 
 <style lang="postcss">

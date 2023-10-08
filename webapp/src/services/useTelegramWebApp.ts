@@ -62,7 +62,7 @@ export function useTelegramWebApp(): UseTelegramWebApp {
    */
   function ready(): void {
     tgWebApp?.ready();
-    // tgWebApp?.expand();
+    tgWebApp?.expand();
   }
 
   /**
