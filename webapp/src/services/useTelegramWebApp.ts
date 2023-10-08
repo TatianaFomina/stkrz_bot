@@ -9,6 +9,7 @@ declare global {
         offEvent: (eventName: string, cb: () => void) => void;
         sendData: (data: string) => void;
         setHeaderColor: (color: string) => void;
+        enableClosingConfirmation: () => void;
         platform: Platform;
         initDataUnsafe: {
           query_id: string;
@@ -74,6 +75,7 @@ export function useTelegramWebApp(): UseTelegramWebApp {
     tgWebApp?.expand();
 
     tgWebApp?.setHeaderColor(tgWebApp?.themeParams.secondary_bg_color);
+    tgWebApp?.enableClosingConfirmation();
   }
 
   /**
