@@ -1,64 +1,76 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <div class="stickerset-view">
-    <div class="stickerset-view__stickers">
-      <div
-        v-for="sticker in stickers"
-        :key="sticker.emojis"
-        class="stickerset-view__item"
-      >
-        <img
-          class="stickerset-view__item-image"
-          :src="getUrl(sticker.data)"
+    <template v-if="!isLoading">
+      <div class="stickerset-view__stickers">
+        <div
+          v-for="sticker in stickers"
+          :key="sticker.emojis"
+          class="stickerset-view__item"
         >
+          <img
+            class="stickerset-view__item-image"
+            :src="getUrl(sticker.data)"
+          >
+
+          <button
+            class="stickerset-view__delete-item"
+            @click="deleteSticker(sticker)"
+          >
+            <Cross />
+          </button>
+        </div>
+
+        <EmptyPreview
+          v-if="stickers.length === 0"
+          :text="t('stickers_view.empty')"
+          class="stickerset-view__empty"
+        />
 
         <button
-          class="stickerset-view__delete-item"
-          @click="deleteSticker(sticker)"
+          v-if="stickers.length <= maxStickers"
+          class="stickerset-view__add"
+          @click="addNewSticker"
         >
-          <Cross />
+          <PlusIcon />
+          {{ t('stickers_view.add_sticker') }}
         </button>
+
+        <p
+          v-else
+          class="stickerset-view__message"
+        >
+          <span v-html="t('stickers_view.max_exceeded')" />
+        </p>
       </div>
 
-      <EmptyPreview
-        v-if="stickers.length === 0"
-        :text="t('stickers_view.empty')"
-        class="stickerset-view__empty"
+      <div class="stickerset-view__settings">
+        <Input
+          v-model="stickersetTitle"
+          class="stickerset-view__input"
+          :placeholder="t('stickers_view.title_placeholder')"
+          :hint="t('stickers_view.title_hint')"
+        />
+
+        <Input
+          v-model="stickersetName"
+          pattern="[^-A-Za-z]"
+          class="stickerset-view__input"
+          :placeholder="t('stickers_view.name_placeholder')"
+          :hint="t('stickers_view.name_hint')"
+        />
+      </div>
+    </template>
+    <Transition>
+      <LottieAnimation
+        v-if="isLoading"
+        class="stickerset-view__loading-animation"
+        :animation-data="DuckThinking"
+        :auto-play="true"
+        :loop="true"
+        :speed="1"
       />
-
-      <button
-        v-if="stickers.length <= maxStickers"
-        class="stickerset-view__add"
-        @click="addNewSticker"
-      >
-        <PlusIcon />
-        {{ t('stickers_view.add_sticker') }}
-      </button>
-
-      <p
-        v-else
-        class="stickerset-view__message"
-      >
-        <span v-html="t('stickers_view.max_exceeded')" />
-      </p>
-    </div>
-
-    <div class="stickerset-view__settings">
-      <Input
-        v-model="stickersetTitle"
-        class="stickerset-view__input"
-        :placeholder="t('stickers_view.title_placeholder')"
-        :hint="t('stickers_view.title_hint')"
-      />
-
-      <Input
-        v-model="stickersetName"
-        pattern="[^-A-Za-z]"
-        class="stickerset-view__input"
-        :placeholder="t('stickers_view.name_placeholder')"
-        :hint="t('stickers_view.name_hint')"
-      />
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -74,6 +86,8 @@ import { useServer } from '../services/useServer';
 import { useLocale } from '../services/useLocale';
 import Cross from '../icons/Cross.vue';
 import EmptyPreview from '../components/EmptyPreview.vue';
+import { LottieAnimation } from 'lottie-web-vue';
+import DuckThinking from '../assets/animations/duck.json';
 
 const {
   userId,
@@ -102,6 +116,7 @@ const stickersetTitle = ref<string | null | undefined>();
 const stickersetName = ref<string | null | undefined>();
 const stickers = ref<Sticker[]>([]);
 const maxStickers = 50;
+const isLoading = ref(false);
 
 onMounted(() => {
   setMainButtonText(t('stickers_view.publish'));
@@ -170,6 +185,7 @@ async function submit(): Promise<void> {
   }
 
   try {
+    isLoading.value = true;
     showProgress();
 
     const exists = await checkStickersetName(stickersetName.value);
@@ -190,6 +206,7 @@ async function submit(): Promise<void> {
 
     close();
   } finally {
+    isLoading.value = false;
     hideProgress();
   }
 }
@@ -207,6 +224,7 @@ function getUrl(data: Blob): string {
 .stickerset-view {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 
   &__stickers {
     --padding: 17px;
@@ -294,5 +312,21 @@ function getUrl(data: Blob): string {
 
   }
 
+  &__loading-animation {
+    width: 150px;
+    height: 150px;
+    margin: auto;
+  }
+}
+
+/* classes for transition animation */
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>
