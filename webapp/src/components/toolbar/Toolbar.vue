@@ -66,10 +66,9 @@ function onToolClick(tool: { name: string }): void {
 
 <style lang="postcss">
   .toolbar {
-    width: calc(100% - 17px * 2);
     background-color: var(--color-background-secondary);
     display: flex;
-    padding: 10px 17px;
+    padding-top: 12px;
     padding-bottom: 12px;
     justify-content: space-around;
     border-top: 1px rgba(128, 128, 128, 0.213) solid;
@@ -93,7 +92,6 @@ function onToolClick(tool: { name: string }): void {
     &__tool-label {
       font-size: 12px;
       text-align: center;
-      margin-top: 7px;
     }
 
   }

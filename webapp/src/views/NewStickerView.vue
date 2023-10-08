@@ -3,29 +3,27 @@
     ref="container"
     class="new-sticker"
   >
-    <div class="new-sticker__gallery">
-      <ImagePreview
-        v-if="text"
-        class="new-sticker__preview"
-        :text="text"
-        :text-size="textSize"
-        :stroke-size="strokeSize"
-        :font="font"
-        :text-color="textColor"
-        @update="onImageDataUpdate"
-      />
+    <ImagePreview
+      v-if="text"
+      class="new-sticker__preview"
+      :text="text"
+      :text-size="textSize"
+      :stroke-size="strokeSize"
+      :font="font"
+      :text-color="textColor"
+      @update="onImageDataUpdate"
+    />
 
-      <EmptyPreview
-        v-else
-        class="new-sticker__empty"
-      />
-    </div>
+    <EmptyPreview
+      v-else
+      class="new-sticker__empty"
+    />
   </div>
+
   <div
     ref="tools"
     class="new-sticker__tools"
   >
-    {{ viewportHeight }} / {{ previewHeight }} /  {{ toolsHeight }}
     <Textarea
       ref="textInput"
       v-model="text"
@@ -33,8 +31,9 @@
       :placeholder="t('editor.text_placeholder')"
       :hint=" t('editor.text_prompt')"
       @focus="onFocus"
+      @blur="onBlur"
     />
-    <template v-if="!isToolbarHidden">
+    <div v-show="!isToolbarHidden">
       <FontSelector
         v-show="currentTab === 'font'"
         v-model="font"
@@ -57,12 +56,12 @@
       />
 
       <Toolbar v-model="currentTab" />
-    </template>
+    </div>
   </div>
 </template>
 
 <script lang='ts' setup>
-import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useTelegramWebApp, useTelegramWebAppBackButton, useTelegramWebAppMainButton } from '../services/useTelegramWebApp';
 import { useStore } from '../services/useStore';
@@ -77,15 +76,15 @@ import { Tool } from '../components/toolbar/Tool';
 import TextSizeInput from '../components/TextSizeInput.vue';
 import StrokeSizeInput from '../components/StrokeSizeInput.vue';
 import ColorSelector from '../components/ColorSelector.vue';
-import { watchOnce } from '@vueuse/core';
 
 const {
   impactOccurred,
+  onViewportChange,
+  getViewportHeight,
 } = useTelegramWebApp();
 
 const {
   showMainButton,
-  hideMainButton,
   setMainButtonText,
   addMainButtonClickHandler,
   removeMainButtonClickHandler,
@@ -118,11 +117,25 @@ const textColor = ref<string>('black');
 const imageData = ref<Blob | null>(null);
 const currentTab = ref<Tool>('font');
 
+/**
+ * True if toolbar should be hidden.
+ * Used to hide keyboard on input focus
+ */
+const isToolbarHidden = ref(false);
+
 const container = ref<HTMLElement | null>(null);
 const tools = ref<HTMLElement | null>(null);
-const viewportHeight = ref(0);
+const textInput = ref<InstanceType<typeof Textarea>>(null);
 
+/**
+ * Sticker preview height
+*/
 const previewHeight = ref(0);
+
+/**
+ * Tools top indent for fixed positioning
+ */
+const toolsTop = ref(0);
 
 onMounted(async () => {
   setMainButtonText(props.back ? t('editor.add') : t('editor.create'));
@@ -134,27 +147,11 @@ onMounted(async () => {
     addBackButtonClickHandler(onBackClick);
   }
 
-  window.visualViewport?.addEventListener('resize', (event) => {
-    viewportHeight.value = event.target?.height;
+  updateSizes();
 
-    if (tools.value !== null) {
-      previewHeight.value = viewportHeight.value - tools.value.offsetHeight;
-    }
-
-    // container.value.style.height = viewportHeight.value + 'px';
+  onViewportChange(() => {
+    updateSizes();
   });
-
-  previewHeight.value = viewportHeight.value;
-
-  updateToolsHeight();
-
-  // window.Telegram?.WebApp.onEvent('viewportChanged', (params) => {
-  //   if (!params.isStateStable) {
-  //     return;
-  //   }
-
-  //   viewportHeight.value = window.Telegram?.WebApp.viewportStableHeight;
-  // });
 });
 
 onUnmounted(() => {
@@ -162,6 +159,19 @@ onUnmounted(() => {
   removeBackButtonClickHandler(onBackClick);
   hideBackButton();
 });
+
+/**
+ * Updates indents and heights of fixed positioned elements.
+ */
+function updateSizes(): void {
+  if (tools.value === null) {
+    return;
+  }
+  const viewportHeight = getViewportHeight() || 0;
+
+  previewHeight.value = viewportHeight - tools.value.offsetHeight;
+  toolsTop.value = previewHeight.value;
+}
 
 /**
  * Update main button active state based on enterred text content
@@ -198,134 +208,74 @@ function onImageDataUpdate(data: Blob | null): void {
   imageData.value = data;
 }
 
-const isToolbarHidden = ref(false);
-
-const textInput = ref<InstanceType<typeof Textarea>>(null);
-
+/**
+ * Hides software keyboard on mobile devices
+*/
 function hideKeyboard(): void {
   textInput.value.blur();
+
   window.scrollTo(0, 0);
 }
 
-const toolsHeight = ref(0);
-
-function updateToolsHeight(): void {
-  if (tools.value) {
-    toolsHeight.value = tools.value.offsetHeight;
-  }
-}
-
+/**
+ * Handles input focus
+ */
 function onFocus(): void {
-  // setTimeout(() => {
-
-  // watchOnce(viewportHeight, () => {
-  //   alert('change');
-  //   container.value.style.height = viewportHeight.value + 'px';
-  // });
-
-  // window.scrollTo(0, 0);
-  // container.value?.scrollIntoView(true);
-  // nextTick(() => {
   isToolbarHidden.value = true;
-  requestAnimationFrame(() => {
-    updateToolsHeight();
-    // window.scrollTo(0, 0);
-  });
-  // });
-
-  // setTimeout(() => {
-  //   container.value.style.height = viewportHeight.value + 'px';
-  // }, 1000);
-  // nextTick(() => {
-  //   container.value.style.height = viewportHeight.value + 'px';
-  // });
-  // updateHeight();
-
-  // container.value.style.height = viewportHeight.value + 'px';
-  // window.scrollTo(0, 0);
-  // }, 100);
 
   setMainButtonText('Continue');
-  removeMainButtonClickHandler(onClick);
+
   addMainButtonClickHandler(() => {
     hideKeyboard();
-    container.value?.click();
   });
 }
 
-// function updateHeight() {
-//   window.visualViewport?.addEventListener('resize', (event) => {
-//     viewportHeight.value = event.target?.height;
-//     container.value.style.height = viewportHeight.value + 'px';
-//   }, { once: true });
-// }
-
-function onBlur(): void {
-
+function onBlur() {
+  isToolbarHidden.value = false;
 }
 </script>
 
 <style lang="postcss">
 .new-sticker {
-  /* height: 100vh; */
-  /* height: var(--tg-viewport-stable-height); */
-  height: v-bind('previewHeight + "px"');
-  /* transition: height 0.2s ease-in-out; */
+  height: 100vh;
+  max-height: v-bind('previewHeight + "px"');
+  position: fixed;
+  overflow: hidden;
+  /* top: calc(var(--tg-viewport-stable-height)) - v-bind('toolsHeight + "px"'); */
+  top: 0;
+  left: 0;
+  right: 0;
+  will-change: top, height, max-height;
+  transition: max-height 200ms ease;
+  z-index: 100;
+
+  background-color: var(--color-background-secondary);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: coral;
-  position: fixed;
-  top: calc(var(--tg-viewport-stable-height)) - v-bind('toolsHeight + "px"');
-  will-change: height;
-  transition: height 200ms ease;
 
   &__preview {
-    width: 150px;
-    height: 150px;
+    width: 200px;
+    height: 200px;
     box-sizing: border-box;
   }
 
   &__input {
-    align-self: stretch;
     margin-left: 17px;
     margin-right: 17px;
     margin-bottom: 28px;
     margin-top: 28px;
   }
 
-  &__font-selector {
-    align-self: stretch;
-  }
-
-  &__gallery {
-    width: 100%;
-    background-color: var(--color-background-secondary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: red;
-    /* flex: 1; */
-  }
-
   &__tools {
     position: fixed;
-    top: calc(var(--tg-viewport-stable-height) - v-bind('toolsHeight + "px"'));
-    /* transform: translateY(-100%); */
+    top: v-bind('toolsTop + "px"');
     left: 0;
     right: 0;
     z-index: 2;
     background-color: var(--color-background);
-    transform: translateZ(0);
-    /* align-self: stretch; */
-    /* position: fixed;
-    top: var(--tg-viewport-stable-height);
-    transition: top 0.2s ease-in-out;
-    transform: translateY(-100%);
-    left: 0;
-    right: 0;
-     */
+    transition: top 200ms ease;
+    will-change: top;
   }
 
 }

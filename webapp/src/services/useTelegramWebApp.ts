@@ -5,6 +5,8 @@ declare global {
         ready: () => void;
         close: () => void;
         expand: () => void;
+        onEvent: (eventName: string, cb: () => void) => void;
+        offEvent: (eventName: string, cb: () => void) => void;
         sendData: (data: string) => void;
         platform: Platform;
         initDataUnsafe: {
@@ -17,6 +19,7 @@ declare global {
         MainButton: MainButton;
         BackButton: BackButton;
         HapticFeedback: HapticFeedback;
+        viewportStableHeight: number;
       };
     };
   }
@@ -51,6 +54,8 @@ interface HapticFeedback {
 
 const tgWebApp = window.Telegram?.WebApp;
 
+const viewportChangesCallbacks: Array<() => void> = [];
+
 export function useTelegramWebApp(): UseTelegramWebApp {
   const queryId = tgWebApp?.initDataUnsafe.query_id;
   const userId = tgWebApp?.initDataUnsafe?.user?.id;
@@ -80,6 +85,27 @@ export function useTelegramWebApp(): UseTelegramWebApp {
     tgWebApp?.HapticFeedback.impactOccurred(style);
   }
 
+  /**
+   * Occurs when the visible section of the Mini App is changed.
+   * @param cb - callback to trigger on viewport change
+   */
+  function onViewportChange(cb: () => void): void {
+    // Clear old listeners
+    viewportChangesCallbacks.forEach(item => tgWebApp?.offEvent('viewportChanged', item));
+    viewportChangesCallbacks.length = 1;
+
+    // Assign new one
+    viewportChangesCallbacks.push(cb);
+    tgWebApp?.onEvent('viewportChanged', cb);
+  }
+
+  /**
+   * Returns the height of the visible area of the Mini App in its last stable state.
+   */
+  function getViewportHeight(): number | undefined {
+    return tgWebApp?.viewportStableHeight;
+  }
+
   return {
     queryId,
     userId,
@@ -88,6 +114,8 @@ export function useTelegramWebApp(): UseTelegramWebApp {
     ready,
     close,
     impactOccurred,
+    onViewportChange,
+    getViewportHeight,
   };
 }
 
@@ -99,7 +127,11 @@ interface UseTelegramWebApp {
   ready: () => void;
   close: () => void;
   impactOccurred: (style: HapticImpactStyle) => void;
+  onViewportChange: (cb: () => void) => void;
+  getViewportHeight: () => number | undefined;
 }
+
+let mainButtonCallbacks: Array<() => void> = [];
 
 export function useTelegramWebAppMainButton(): {
   showMainButton: () => void;
@@ -145,6 +177,12 @@ export function useTelegramWebAppMainButton(): {
    * @param cb - function to be executed on main button click
    */
   function addMainButtonClickHandler(cb: () => void): void {
+    // Remove old handlers
+    mainButtonCallbacks.forEach(item => tgWebApp?.MainButton.offClick(item));
+    mainButtonCallbacks.length = 0;
+
+    // Add new handler
+    mainButtonCallbacks.push(cb);
     tgWebApp?.MainButton.onClick(cb);
   }
 
@@ -153,6 +191,7 @@ export function useTelegramWebAppMainButton(): {
    * @param cb - function to stop being executed on main button click
    */
   function removeMainButtonClickHandler(cb: () => void): void {
+    mainButtonCallbacks = mainButtonCallbacks.filter(item => item !== cb);
     tgWebApp?.MainButton.offClick(cb);
   }
 
