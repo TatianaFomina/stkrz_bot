@@ -1,4 +1,5 @@
 @import "variables.css";
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Spice&family=Nabla&family=Roboto:wght@400;500&display=swap');
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -15,6 +16,11 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+[platform="android"], [platform="android_x"] {
+  font-family: 'Roboto', sans-serif;
+}
+
 
 body {
   margin: 0;

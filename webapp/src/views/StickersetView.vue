@@ -217,6 +217,7 @@ function getUrl(data: Blob): string {
     gap: var(--padding);
     background-color: var(--color-background);
     padding: var(--padding);
+    padding-top: 24px;
     flex: 1;
   }
 
@@ -242,7 +243,6 @@ function getUrl(data: Blob): string {
   &__settings {
     background-color: var(--color-background-secondary);
     padding: 0 var(--margin-x);
-    padding-top: var(--margin-x);
     padding-top: var(--margin-y);
     flex: 1;
 
