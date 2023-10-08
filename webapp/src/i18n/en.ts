@@ -6,9 +6,9 @@ export default {
     title_placeholder: 'Stickerpack title',
     name_hint: 'Unique identifier used for referencing stickers. <br>Be cautious, stickerpack name can not be changed later',
     name_placeholder: 'Stickerpack short name',
-    publish: 'PUBLISH',
+    publish: 'Publish',
     stickerpask_exists: 'Stickerpack with such short name already exists 😢. Please, choose another one',
-    empty: 'Empty stickerpack',
+    empty: 'Empty stickerpack...',
   },
   editor: {
     text_prompt: 'Text that will be displayed on the sticker',

@@ -20,6 +20,7 @@
 
       <EmptyPreview
         v-else
+        :text="t('editor.empty')"
         class="new-sticker__empty"
       />
     </div>
@@ -242,10 +243,7 @@ const toolbarHeight = computed(() => isToolbarHidden.value ? 0 : 139);
   }
 
   &__input {
-    padding-left: 17px;
-    padding-right: 17px;
-    padding-bottom: 28px;
-    padding-top: 17px;
+    padding: 17px;
     background-color: var(--color-background);
     background-color: var(--color-background-secondary);
   }

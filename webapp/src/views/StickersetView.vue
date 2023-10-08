@@ -20,15 +20,12 @@
         </button>
       </div>
 
-      <div
+      <EmptyPreview
         v-if="stickers.length === 0"
+        :text="t('stickers_view.empty')"
         class="stickerset-view__empty"
-      >
-        {{ t('stickers_view.empty') }}
-      </div>
-    </div>
+      />
 
-    <div class="stickerset-view__settings">
       <button
         v-if="stickers.length <= maxStickers"
         class="stickerset-view__add"
@@ -44,7 +41,9 @@
       >
         <span v-html="t('stickers_view.max_exceeded')" />
       </p>
+    </div>
 
+    <div class="stickerset-view__settings">
       <Input
         v-model="stickersetTitle"
         class="stickerset-view__input"
@@ -74,6 +73,7 @@ import { useStore } from '../services/useStore';
 import { useServer } from '../services/useServer';
 import { useLocale } from '../services/useLocale';
 import Cross from '../icons/Cross.vue';
+import EmptyPreview from '../components/EmptyPreview.vue';
 
 const {
   userId,
@@ -205,6 +205,8 @@ function getUrl(data: Blob): string {
 
 <style lang="postcss">
 .stickerset-view {
+  display: flex;
+  flex-direction: column;
 
   &__stickers {
     --padding: 17px;
@@ -213,21 +215,19 @@ function getUrl(data: Blob): string {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: var(--padding);
-    background-color: var(--color-background-secondary);
-    padding: 34px var(--padding);
+    background-color: var(--color-background);
+    padding: var(--padding);
     flex: 1;
   }
 
   &__empty {
     grid-column: 1 / 4;
     text-align: center;
-    color: var(--color-text-secondary);
-    opacity: 0.5;
   }
 
   &__item {
     position: relative;
-    background-color: var(--color-background);
+    background-color: var(--color-background-secondary);
     border-radius: 10px;
     box-shadow: 0px 6px 12px 0px rgba(0, 0, 0, 0.10), 0px 0px 5px 0px rgba(0, 0, 0, 0.10);
     aspect-ratio: 1 / 1;
@@ -240,8 +240,11 @@ function getUrl(data: Blob): string {
   }
 
   &__settings {
-    margin-top: 28px;
+    background-color: var(--color-background-secondary);
+    /* margin-top: 28px; */
     padding: 0 17px;
+    padding-top: 17px;
+    flex: 1;
 
     & > *:not(:first-child) {
       margin-top: 28px;
@@ -277,6 +280,7 @@ function getUrl(data: Blob): string {
     display: flex;
     align-items: center;
     margin: 0 auto;
+    grid-column: 1 / 4;
 
     svg {
       margin-right: 3px;
@@ -286,6 +290,8 @@ function getUrl(data: Blob): string {
   &__message {
     text-align: center;
     color: var(--color-text-secondary);
+    grid-column: 1 / 4;
+
   }
 
 }

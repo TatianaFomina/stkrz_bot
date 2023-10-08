@@ -10,7 +10,7 @@
       :speed="1"
     />
     <p class="empty-preview__title">
-      {{ t('editor.empty') }}
+      {{ text }}
     </p>
   </div>
 </template>
@@ -18,9 +18,10 @@
 <script lang='ts' setup>
 import { LottieAnimation } from 'lottie-web-vue';
 import EyesAnimation from '../assets/animations/eyes.json';
-import { useLocale } from '../services/useLocale';
 
-const { t } = useLocale();
+defineProps<{
+  text: string;
+}>();
 </script>
 
 <style lang="postcss">
@@ -30,6 +31,7 @@ const { t } = useLocale();
   flex-direction: column;
   align-items: center;
   text-align: center;
+  justify-content: center;
   padding: 10px 50px;
   height: 200px;
   box-sizing: border-box;

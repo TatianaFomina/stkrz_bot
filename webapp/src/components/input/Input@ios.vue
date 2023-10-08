@@ -92,11 +92,11 @@ function clear(): void {
 }
 
 .input-field {
-  background-color: var(--color-background-secondary);
+  background-color: var(--color-background);
   border-radius: 10px;
   display: flex;
   padding-left: 17px;
-  padding-right: 17px;
+  padding-right: 13px;
   box-sizing: border-box;
   height: 44px;
 
