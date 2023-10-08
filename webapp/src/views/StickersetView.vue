@@ -232,16 +232,18 @@ function getUrl(data: Blob): string {
     width: calc(100% - var(--padding) * 2);
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
     gap: var(--padding);
     background-color: var(--color-background);
     padding: var(--padding);
-    padding-top: 24px;
     flex: 1;
   }
 
   &__empty {
     grid-column: 1 / 4;
+    grid-row: 1;
     text-align: center;
+    align-self: center;
   }
 
   &__item {
@@ -262,7 +264,6 @@ function getUrl(data: Blob): string {
     background-color: var(--color-background-secondary);
     padding: 0 var(--margin-x);
     padding-top: var(--margin-y);
-    flex: 1;
 
     & > *:not(:first-child) {
       margin-top: 28px;
@@ -299,6 +300,7 @@ function getUrl(data: Blob): string {
     align-items: center;
     margin: 0 auto;
     grid-column: 1 / 4;
+    height: -webkit-max-content;
 
     svg {
       margin-right: 3px;
