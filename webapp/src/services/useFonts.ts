@@ -3,6 +3,9 @@ import AirfoolFontUrl from '../assets/fonts/Airfool.ttf';
 import ShadowFontUrl from '../assets/fonts/Shadow-Regular.ttf';
 import SwampyFontUrl from '../assets/fonts/Swampy-Clean.ttf';
 import DurikFontUrl from '../assets/fonts/ДУРИК.ttf';
+import LepkaFont from '../assets/fonts/LEPKA.otf';
+import EuropeExtendedFont from '../assets/fonts/europeextendedc_bold.otf';
+import FibreFont from '../assets/fonts/fibre-font-extended.otf';
 
 /**
  * Available fonts
@@ -13,6 +16,9 @@ export enum Font {
   Shadow = 'Shadow',
   Swampy = 'Swampy',
   Durik = 'Durik',
+  Lepka = 'Lepka',
+  EuropeExtended = 'EuropeExtended',
+  Fibre = 'Fibre',
 }
 
 /**
@@ -24,6 +30,9 @@ const fontsSources = {
   [Font.Shadow]: ShadowFontUrl,
   [Font.Swampy]: SwampyFontUrl,
   [Font.Durik]: DurikFontUrl,
+  [Font.Lepka]: LepkaFont,
+  [Font.EuropeExtended]: EuropeExtendedFont,
+  [Font.Fibre]: FibreFont,
 };
 
 /**

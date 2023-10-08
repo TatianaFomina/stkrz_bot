@@ -33,6 +33,9 @@ const buttons = ref<HTMLElement[]>([]);
 const fonts = [
   { name: Font.Airfool, image: new URL('../assets/font-previews/Airfool.png', import.meta.url).href },
   { name: Font.Kosko, image: new URL('../assets/font-previews/Kosko.png', import.meta.url).href },
+  { name: Font.Lepka, image: new URL('../assets/font-previews/Lepka.png', import.meta.url).href },
+  { name: Font.EuropeExtended, image: new URL('../assets/font-previews/EuropeExtended.png', import.meta.url).href },
+  { name: Font.Fibre, image: new URL('../assets/font-previews/Fibre.png', import.meta.url).href },
   { name: Font.Durik, image: new URL('../assets/font-previews/Durik.png', import.meta.url).href },
   { name: Font.Shadow, image: new URL('../assets/font-previews/Shadow.png', import.meta.url).href },
   { name: Font.Swampy, image: new URL('../assets/font-previews/Swampy.png', import.meta.url).href },
