@@ -236,7 +236,6 @@ function getUrl(data: Blob): string {
     gap: var(--padding);
     background-color: var(--color-background);
     padding: var(--padding);
-    flex: 1;
   }
 
   &__empty {
@@ -264,6 +263,7 @@ function getUrl(data: Blob): string {
     background-color: var(--color-background-secondary);
     padding: 0 var(--margin-x);
     padding-top: var(--margin-y);
+    flex: 1;
 
     & > *:not(:first-child) {
       margin-top: 28px;
