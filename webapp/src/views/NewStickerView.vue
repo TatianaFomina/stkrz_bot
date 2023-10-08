@@ -150,7 +150,7 @@ onUnmounted(() => {
 /**
  * Play vibration when text size changes
  */
-watch([textSize, font, strokeSize], () => {
+watch([textSize, font, strokeSize, textColor], () => {
   impactOccurred('light');
 });
 
