@@ -16,8 +16,9 @@ export default {
     style_prompt: 'Select text style',
     size_hint: 'Choose text size',
     stroke_hint: 'Choose stroke size',
-    add: 'ADD',
-    create: 'CREATE STICKER',
+    add: 'Add',
+    create: 'Create sticker',
+    continue: 'Continue',
     start_text: 'Cool',
     empty: 'No text to display...',
     tools: {

@@ -8,6 +8,7 @@ declare global {
         onEvent: (eventName: string, cb: () => void) => void;
         offEvent: (eventName: string, cb: () => void) => void;
         sendData: (data: string) => void;
+        setHeaderColor: (color: string) => void;
         platform: Platform;
         initDataUnsafe: {
           query_id: string;
@@ -15,6 +16,9 @@ declare global {
             id: number;
             language_code: string;
           };
+        };
+        themeParams: {
+          secondary_bg_color: string;
         };
         MainButton: MainButton;
         BackButton: BackButton;
@@ -68,6 +72,8 @@ export function useTelegramWebApp(): UseTelegramWebApp {
   function ready(): void {
     tgWebApp?.ready();
     tgWebApp?.expand();
+
+    tgWebApp?.setHeaderColor(tgWebApp?.themeParams.secondary_bg_color);
   }
 
   /**

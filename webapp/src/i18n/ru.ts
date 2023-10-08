@@ -16,8 +16,9 @@ export default {
     style_prompt: 'Выберите стиль текста',
     size_hint: 'Выберите размер текста',
     stroke_hint: 'Выберите размер обводки',
-    add: 'ДОБАВИТЬ',
-    create: 'СОЗДАТЬ СТИКЕР',
+    add: 'Добавить',
+    create: 'Создать стикер',
+    continue: 'Продолжить',
     start_text: 'Балдёж',
     empty: 'Пусто...',
     tools: {

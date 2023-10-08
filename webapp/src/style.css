@@ -18,9 +18,6 @@
 
 body {
   margin: 0;
-  /* height: 100vh; */
-  /* height: var(--tg-viewport-stable-height); */
-  /* overflow: hidden; */
 }
 
 p {

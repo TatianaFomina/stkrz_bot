@@ -3,37 +3,41 @@
     ref="container"
     class="new-sticker"
   >
-    <ImagePreview
-      v-if="text"
-      class="new-sticker__preview"
-      :text="text"
-      :text-size="textSize"
-      :stroke-size="strokeSize"
-      :font="font"
-      :text-color="textColor"
-      @update="onImageDataUpdate"
-    />
+    <div
+      class="new-sticker__gallery"
+      @touchstart="onTouchStart"
+    >
+      <ImagePreview
+        v-if="text"
+        class="new-sticker__preview"
+        :text="text"
+        :text-size="textSize"
+        :stroke-size="strokeSize"
+        :font="font"
+        :text-color="textColor"
+        @update="onImageDataUpdate"
+      />
 
-    <EmptyPreview
-      v-else
-      class="new-sticker__empty"
-    />
-  </div>
+      <EmptyPreview
+        v-else
+        class="new-sticker__empty"
+      />
+    </div>
 
-  <div
-    ref="tools"
-    class="new-sticker__tools"
-  >
     <Textarea
       ref="textInput"
       v-model="text"
       class="new-sticker__input"
       :placeholder="t('editor.text_placeholder')"
-      :hint=" t('editor.text_prompt')"
+      :hint="t('editor.text_prompt')"
       @focus="onFocus"
-      @blur="onBlur"
     />
-    <div v-show="!isToolbarHidden">
+
+    <div
+      v-show="!isToolbarHidden"
+      ref="tools"
+      class="new-sticker__tools"
+    >
       <FontSelector
         v-show="currentTab === 'font'"
         v-model="font"
@@ -61,7 +65,7 @@
 </template>
 
 <script lang='ts' setup>
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, watch, nextTick, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useTelegramWebApp, useTelegramWebAppBackButton, useTelegramWebAppMainButton } from '../services/useTelegramWebApp';
 import { useStore } from '../services/useStore';
@@ -69,7 +73,7 @@ import ImagePreview from '../components/ImagePreview.vue';
 import EmptyPreview from '../components/EmptyPreview.vue';
 import FontSelector from '../components/FontSelector.vue';
 import { Font } from '../services/useFonts';
-import Textarea from '../components/textarea';
+import Textarea from '../components/textarea/Textarea@ios.vue';
 import { useLocale } from '../services/useLocale';
 import Toolbar from '../components/toolbar/Toolbar.vue';
 import { Tool } from '../components/toolbar/Tool';
@@ -79,8 +83,6 @@ import ColorSelector from '../components/ColorSelector.vue';
 
 const {
   impactOccurred,
-  onViewportChange,
-  getViewportHeight,
 } = useTelegramWebApp();
 
 const {
@@ -125,63 +127,24 @@ const isToolbarHidden = ref(false);
 
 const container = ref<HTMLElement | null>(null);
 const tools = ref<HTMLElement | null>(null);
-const textInput = ref<InstanceType<typeof Textarea>>(null);
-
-/**
- * Sticker preview height
-*/
-const previewHeight = ref(0);
-
-/**
- * Tools top indent for fixed positioning
- */
-const toolsTop = ref(0);
+const textInput = ref<InstanceType<typeof Textarea> | null>(null);
 
 onMounted(async () => {
   setMainButtonText(props.back ? t('editor.add') : t('editor.create'));
-  showMainButton();
-  addMainButtonClickHandler(onClick);
+  showToolbar();
+  addMainButtonClickHandler(submit);
 
   if (props.back) {
     showBackButton();
     addBackButtonClickHandler(onBackClick);
   }
-
-  updateSizes();
-
-  onViewportChange(() => {
-    updateSizes();
-  });
+  showMainButton();
 });
 
 onUnmounted(() => {
-  removeMainButtonClickHandler(onClick);
+  removeMainButtonClickHandler(submit);
   removeBackButtonClickHandler(onBackClick);
   hideBackButton();
-});
-
-/**
- * Updates indents and heights of fixed positioned elements.
- */
-function updateSizes(): void {
-  if (tools.value === null) {
-    return;
-  }
-  const viewportHeight = getViewportHeight() || 0;
-
-  previewHeight.value = viewportHeight - tools.value.offsetHeight;
-  toolsTop.value = previewHeight.value;
-}
-
-/**
- * Update main button active state based on enterred text content
- */
-watch(text, () => {
-  if (text.value === '' || text.value === null || text.value === undefined) {
-    // hideMainButton();
-  } else {
-    // showMainButton();
-  }
 });
 
 /**
@@ -191,7 +154,7 @@ watch([textSize, font, strokeSize], () => {
   impactOccurred('light');
 });
 
-async function onClick(): Promise<void> {
+async function submit(): Promise<void> {
   if (imageData.value === null) {
     return;
   }
@@ -212,7 +175,7 @@ function onImageDataUpdate(data: Blob | null): void {
  * Hides software keyboard on mobile devices
 */
 function hideKeyboard(): void {
-  textInput.value.blur();
+  textInput.value?.blur();
 
   window.scrollTo(0, 0);
 }
@@ -223,36 +186,47 @@ function hideKeyboard(): void {
 function onFocus(): void {
   isToolbarHidden.value = true;
 
-  setMainButtonText('Continue');
-
+  setMainButtonText(t('editor.continue'));
   addMainButtonClickHandler(() => {
     hideKeyboard();
+    showToolbar();
   });
 }
 
-function onBlur() {
+/**
+ * Shows toolbar and updates mauin button text
+ */
+function showToolbar() {
   isToolbarHidden.value = false;
+
+  setMainButtonText(props.back ? t('editor.add') : t('editor.create'));
+  addMainButtonClickHandler(submit);
 }
+
+/**
+ * Handles canvas touch start.
+ * Hides canvas and shows toolbar
+ */
+function onTouchStart() {
+  hideKeyboard();
+
+  nextTick(() => {
+    showToolbar();
+  });
+}
+
+const toolbarHeight = computed(() => isToolbarHidden.value ? 0 : 139);
 </script>
 
 <style lang="postcss">
 .new-sticker {
-  height: 100vh;
-  max-height: v-bind('previewHeight + "px"');
-  position: fixed;
-  overflow: hidden;
-  /* top: calc(var(--tg-viewport-stable-height)) - v-bind('toolsHeight + "px"'); */
-  top: 0;
-  left: 0;
-  right: 0;
-  will-change: top, height, max-height;
-  transition: max-height 200ms ease;
-  z-index: 100;
+  height: calc(100vh - v-bind('toolbarHeight + "px"'));
+  transition: height 300ms ease-in-out;
 
-  background-color: var(--color-background-secondary);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: end;
 
   &__preview {
     width: 200px;
@@ -260,22 +234,28 @@ function onBlur() {
     box-sizing: border-box;
   }
 
+  &__gallery {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px
+  }
+
   &__input {
-    margin-left: 17px;
-    margin-right: 17px;
-    margin-bottom: 28px;
-    margin-top: 28px;
+    padding-left: 17px;
+    padding-right: 17px;
+    padding-bottom: 28px;
+    padding-top: 17px;
+    background-color: var(--color-background);
+    background-color: var(--color-background-secondary);
   }
 
   &__tools {
     position: fixed;
-    top: v-bind('toolsTop + "px"');
-    left: 0;
-    right: 0;
-    z-index: 2;
     background-color: var(--color-background);
-    transition: top 200ms ease;
-    will-change: top;
+    bottom: 0;
+    left: 0;
+    right: 0;;
   }
 
 }

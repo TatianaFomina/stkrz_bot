@@ -31,14 +31,13 @@ const { t } = useLocale();
   align-items: center;
   text-align: center;
   padding: 10px 50px;
-  height: 150px;
+  height: 200px;
   box-sizing: border-box;
 
   &__title {
     font-weight: 500;
     font-size: 16px;
     margin-top: 12px;
-
   }
 
   &__subtitle {

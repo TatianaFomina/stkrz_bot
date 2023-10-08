@@ -82,7 +82,7 @@ function clear(): void {
 
   emit('update:modelValue', '');
   emit('clear');
-  // textarea.value.focus();
+  textarea.value.focus();
 
   textarea.value.style.height = ''; /* Reset the height */
 }
@@ -91,8 +91,13 @@ function blur(): void {
   textarea.value?.blur();
 }
 
+function focus(): void {
+  textarea.value?.focus();
+}
+
 defineExpose({
   blur,
+  focus,
 });
 </script>
 
@@ -109,12 +114,12 @@ defineExpose({
 }
 
 .textarea-field {
-  background-color: var(--color-background-secondary);
+  background-color: var(--color-background);
   border-radius: 10px;
   display: flex;
   padding: 10px 17px;
   padding-left: 17px;
-  padding-right: 17px;
+  padding-right: 13px;
   box-sizing: border-box;
 
   &__input {
