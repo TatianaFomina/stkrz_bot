@@ -74,7 +74,7 @@ import ImagePreview from '../components/ImagePreview.vue';
 import EmptyPreview from '../components/EmptyPreview.vue';
 import FontSelector from '../components/FontSelector.vue';
 import { Font } from '../services/useFonts';
-import Textarea from '../components/textarea/Textarea@ios.vue';
+import Textarea from '../components/textarea/Textarea.vue';
 import { useLocale } from '../services/useLocale';
 import Toolbar from '../components/toolbar/Toolbar.vue';
 import { Tool } from '../components/toolbar/Tool';
@@ -243,7 +243,7 @@ const toolbarHeight = computed(() => isToolbarHidden.value ? 0 : 139);
   }
 
   &__input {
-    padding: 17px;
+    padding: 17px var(--margin-x) 17px;
     background-color: var(--color-background);
     background-color: var(--color-background-secondary);
   }

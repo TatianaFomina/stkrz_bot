@@ -10,11 +10,15 @@ import { onMounted } from 'vue';
 import { useTelegramWebApp } from './services/useTelegramWebApp';
 import { useLocale } from './services/useLocale';
 
-const { ready, language } = useTelegramWebApp();
+const { ready, language, platform } = useTelegramWebApp();
 const { setLocale } = useLocale();
 
 onMounted(() => {
   ready();
+
+  if (platform !== undefined) {
+    window.document.body.setAttribute('platform', platform);
+  }
 
   if (language !== undefined) {
     setLocale(language);

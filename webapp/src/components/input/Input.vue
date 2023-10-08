@@ -93,7 +93,7 @@ function clear(): void {
 
 .input-field {
   background-color: var(--color-background);
-  border-radius: 10px;
+  border-radius: var(--border-radius);
   display: flex;
   padding-left: 17px;
   padding-right: 13px;

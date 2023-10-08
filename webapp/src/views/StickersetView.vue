@@ -64,7 +64,7 @@
 
 <script lang='ts' setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue';
-import Input from '../components/input/index.ts';
+import Input from '../components/input/Input.vue';
 import PlusIcon from '../icons/Plus.vue';
 import { useTelegramWebApp, useTelegramWebAppMainButton } from '../services/useTelegramWebApp';
 import { useRouter } from 'vue-router';
@@ -228,7 +228,7 @@ function getUrl(data: Blob): string {
   &__item {
     position: relative;
     background-color: var(--color-background-secondary);
-    border-radius: 10px;
+    border-radius: var(--border-radius);
     box-shadow: 0px 6px 12px 0px rgba(0, 0, 0, 0.10), 0px 0px 5px 0px rgba(0, 0, 0, 0.10);
     aspect-ratio: 1 / 1;
   }
@@ -241,9 +241,9 @@ function getUrl(data: Blob): string {
 
   &__settings {
     background-color: var(--color-background-secondary);
-    /* margin-top: 28px; */
-    padding: 0 17px;
-    padding-top: 17px;
+    padding: 0 var(--margin-x);
+    padding-top: var(--margin-x);
+    padding-top: var(--margin-y);
     flex: 1;
 
     & > *:not(:first-child) {

@@ -115,7 +115,7 @@ defineExpose({
 
 .textarea-field {
   background-color: var(--color-background);
-  border-radius: 10px;
+  border-radius: var(--border-radius);
   display: flex;
   padding: 10px 17px;
   padding-left: 17px;

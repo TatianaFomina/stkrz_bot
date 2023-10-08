@@ -8,4 +8,15 @@
   --color-link: var(--tg-theme-link-color, rgb(67, 123, 208));
 
   --font-size-default: 15px;
+
+  --border-radius: 10px;
+  --margin-x: 17px;
+  --margin-y: 0px;
+}
+
+
+[platform="android"], [platform="android_x"] {
+  --border-radius: 0;
+  --margin-x: 0;
+  --margin-y: 10px;
 }
