@@ -1,11 +1,7 @@
 @import "variables.css";
-@import url('https://fonts.googleapis.com/css2?family=Bungee+Spice&family=Nabla&family=Roboto:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
   color-scheme: light dark;
   color: var(--color-text);
   background-color: var(--color-background-secondary);
@@ -20,7 +16,6 @@
 [platform="android"], [platform="android_x"] {
   font-family: 'Roboto', sans-serif;
 }
-
 
 body {
   margin: 0;

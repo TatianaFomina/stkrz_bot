@@ -60,5 +60,8 @@ ngrok start --all
 ```
 
 ### Build
-Follow the instructions on how to start/build project in corresponding [webapp](https://github.com/TatianaFomina/stkrz_bot/blob/main/webapp/README.md) and [server](https://github.com/TatianaFomina/stkrz_bot/blob/main/server/README.md) README files.
+Follow the instructions on how to start/build project in corresponding webapp and server README files.
+
+- [webapp/README.md](https://github.com/TatianaFomina/stkrz_bot/blob/main/webapp/README.md) 
+- [server/README.md](https://github.com/TatianaFomina/stkrz_bot/blob/main/server/README.md)
 
