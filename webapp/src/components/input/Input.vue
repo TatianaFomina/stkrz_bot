@@ -10,6 +10,8 @@
         :placeholder="placeholder"
         @keyup="onInput"
         @keydown="validate"
+        @focus="emit('focus')"
+        @blur="emit('blur')"
       >
       <button
         v-if="modelValue"
@@ -43,6 +45,8 @@ const props = defineProps<{
 const emit = defineEmits<{
   (eventName: 'update:modelValue', value: string): void;
   (eventName: 'clear'): void;
+  (eventName: 'focus'): void;
+  (eventName: 'blur'): void;
 }>();
 
 const input = ref< HTMLInputElement | null >(null);
@@ -77,6 +81,14 @@ function clear(): void {
   emit('clear');
   input.value?.focus();
 }
+
+function blur(): void {
+  input.value?.blur();
+}
+
+defineExpose({
+  blur,
+});
 </script>
 
 <style lang="postcss">

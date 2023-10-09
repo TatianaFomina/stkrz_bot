@@ -46,18 +46,24 @@
 
       <div class="stickerset-view__settings">
         <Input
+          ref="titleInput"
           v-model="stickersetTitle"
           class="stickerset-view__input"
           :placeholder="t('stickers_view.title_placeholder')"
           :hint="t('stickers_view.title_hint')"
+          @focus="onFocus"
+          @blur="onBlur"
         />
 
         <Input
+          ref="shortnameInput"
           v-model="stickersetName"
           pattern="[^-A-Za-z]"
           class="stickerset-view__input"
           :placeholder="t('stickers_view.name_placeholder')"
           :hint="t('stickers_view.name_hint')"
+          @focus="onFocus"
+          @blur="onBlur"
         />
       </div>
     </template>
@@ -118,6 +124,9 @@ const stickers = ref<Sticker[]>([]);
 const maxStickers = 50;
 const isLoading = ref(false);
 
+const titleInput = ref<InstanceType<typeof Input> | null>(null);
+const shortnameInput = ref<InstanceType<typeof Input> | null>(null);
+
 onMounted(() => {
   setMainButtonText(t('stickers_view.publish'));
   addMainButtonClickHandler(submit);
@@ -147,12 +156,7 @@ watch(stickersetName, value => {
   setName(value);
 }, { immediate: true });
 
-watch([stickers, stickersetName, stickersetTitle], () => {
-  if (stickers.value.length === 0) {
-    setMainButtonActive(false);
-    return;
-  }
-
+watch([stickersetName, stickersetTitle], () => {
   if (stickersetName.value === null || stickersetName.value === undefined || stickersetName.value.length === 0) {
     setMainButtonActive(false);
     return;
@@ -180,6 +184,10 @@ function deleteSticker(sticker: Sticker): void {
 }
 
 async function submit(): Promise<void> {
+  if (stickers.value.length === 0) {
+    alert(t('stickers_view.no_stickers'));
+    return;
+  }
   if (userId === undefined || queryId === undefined || typeof stickersetName.value !== 'string' || typeof stickersetTitle.value !== 'string') {
     return;
   }
@@ -217,6 +225,34 @@ async function submit(): Promise<void> {
  */
 function getUrl(data: Blob): string {
   return URL.createObjectURL(data);
+}
+
+/**
+ * Handles input focus
+ */
+function onFocus(): void {
+  setMainButtonText(t('editor.continue'));
+  addMainButtonClickHandler(() => {
+    hideKeyboard();
+  });
+}
+
+/**
+ * Handles input blur
+ */
+function onBlur(): void {
+  setMainButtonText(t('stickers_view.publish'));
+  addMainButtonClickHandler(submit);
+}
+
+/**
+ * Hides software keyboard on mobile devices
+ */
+function hideKeyboard(): void {
+  titleInput.value?.blur();
+  shortnameInput.value?.blur();
+
+  window.scrollTo(0, 0);
 }
 </script>
 

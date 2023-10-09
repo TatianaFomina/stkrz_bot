@@ -9,6 +9,7 @@ export default {
     publish: 'Publish',
     stickerpask_exists: 'Stickerpack with such short name already exists 😢. Please, choose another one',
     empty: 'Empty stickerpack...',
+    no_stickers: 'Can not publish empty stickerpack! Please add some stickers first',
   },
   editor: {
     text_prompt: 'Text that will be displayed on the sticker',
