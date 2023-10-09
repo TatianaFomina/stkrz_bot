@@ -1,15 +1,14 @@
 # Telegram Stickers MiniApp
 A Telegram MiniApp that allows to create personalised sticker packs. Lets you make your own text stickers for any occasion with just a few taps using cool graphic interface 💅🛍️
 
+![MiniApp user interface](./assets/interface.png)
+
 ## Features
 - Neat and tidy UI adapted for different clients (iOS and Android)
 - I18n support
 - Implemented using Vue.js
 - Does not use any UI-kit library
 
-
-## User interface
-![Bot interface](./assets/interface.png)
 
 ## Running locally
 
