@@ -30,7 +30,6 @@ From developer's perspective this repository might be usefull for those who deve
 You can test and develop your MiniApps in Telegram test environment, which is completely separate from the main environment.
 For that you'll have to create new separate account and a bot with @BotFather.
 Don't forget to set environment variable `DEV=true` in `server/.env` to perform API calls to test environment as well.
-
 [Learn more](https://core.telegram.org/bots/webapps#testing-mini-apps)
 
 ### Ngrok
