@@ -1,3 +1,5 @@
+import { type Ref, computed } from 'vue';
+
 declare global {
   interface Window {
     Telegram?: {
@@ -114,11 +116,17 @@ export function useTelegramWebApp(): UseTelegramWebApp {
     return tgWebApp?.viewportStableHeight;
   }
 
+  /**
+   * True if mobile client hosts webapp
+   */
+  const isMobileClient = computed(() => platform === 'ios' || platform === 'android');
+
   return {
     queryId,
     userId,
     language,
     platform,
+    isMobileClient,
     ready,
     close,
     impactOccurred,
@@ -132,6 +140,7 @@ interface UseTelegramWebApp {
   userId: number | undefined;
   language: string | undefined;
   platform: Platform | undefined;
+  isMobileClient: Ref<boolean>;
   ready: () => void;
   close: () => void;
   impactOccurred: (style: HapticImpactStyle) => void;

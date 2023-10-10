@@ -100,6 +100,7 @@ const {
   queryId,
   impactOccurred,
   close,
+  isMobileClient,
 } = useTelegramWebApp();
 
 const {
@@ -228,9 +229,13 @@ function getUrl(data: Blob): string {
 }
 
 /**
- * Handles input focus
+ * Handles input focus.
+ * Updates mauin button text and function for better accesibility on mobile.
  */
 function onFocus(): void {
+  if (!isMobileClient.value) {
+    return;
+  }
   setMainButtonText(t('editor.continue'));
   addMainButtonClickHandler(() => {
     hideKeyboard();
@@ -238,9 +243,13 @@ function onFocus(): void {
 }
 
 /**
- * Handles input blur
+ * Handles input blur.
+ * Assigns back main button text and function for better accessibility on mobile
  */
 function onBlur(): void {
+  if (!isMobileClient.value) {
+    return;
+  }
   setMainButtonText(t('stickers_view.publish'));
   addMainButtonClickHandler(submit);
 }

@@ -84,6 +84,7 @@ import ColorSelector from '../components/ColorSelector.vue';
 
 const {
   impactOccurred,
+  isMobileClient,
 } = useTelegramWebApp();
 
 const {
@@ -183,8 +184,12 @@ function hideKeyboard(): void {
 
 /**
  * Handles input focus
+ * Hides toolbar and changes main button text and function on mobile for better accessibility
  */
 function onFocus(): void {
+  if (!isMobileClient.value) {
+    return;
+  }
   isToolbarHidden.value = true;
 
   setMainButtonText(t('editor.continue'));
@@ -195,9 +200,13 @@ function onFocus(): void {
 }
 
 /**
- * Shows toolbar and updates mauin button text
+ * Shows toolbar and updates mauin button text.
+ * Returns back hidden toolbar and assigns back main button text and function for better accessibility
  */
 function showToolbar() {
+  if (!isMobileClient.value) {
+    return;
+  }
   isToolbarHidden.value = false;
 
   setMainButtonText(props.back ? t('editor.add') : t('editor.create'));
@@ -209,6 +218,9 @@ function showToolbar() {
  * Hides canvas and shows toolbar
  */
 function onTouchStart() {
+  if (!isMobileClient.value) {
+    return;
+  }
   hideKeyboard();
 
   nextTick(() => {
