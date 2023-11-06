@@ -39,8 +39,8 @@ export class Bot implements MessengerBot {
       testEnvironment: this.isTest,
     });
 
-    /* Handle "/start" message */
-    this.telegramBot.onText(/\/start/, this.handleTextMessage.bind(this));
+    /* Handle text message */
+    this.telegramBot.onText(/.*/, this.handleTextMessage.bind(this));
 
     /* Handle inline mode queries */
     this.telegramBot.on('inline_query', this.handleInlineQuery.bind(this));
