@@ -22,6 +22,9 @@ export interface StickersetParams {
   title: string;
 
 
+  /**
+   * Stickers data
+   */
   stickers: Array<{
     /**
      * Sticker png image
@@ -32,6 +35,18 @@ export interface StickersetParams {
      */
     emojis: string;
   }>
+}
+
+export interface SingleStickerParams {
+  /**
+   * Id of the user who initiates creation of the stickerset
+   */
+  userId: number;
+
+  /**
+   * Sticker png image
+   */
+  image: Buffer;
 }
 
 export interface MessengerBot {
@@ -49,4 +64,12 @@ export interface MessengerBot {
    * @param name - stickerset short name
    */
   checkStickersetExists(name: string): Promise<boolean>;
+
+  /**
+   * Creates single sticker.
+   * Returns id of created sticker
+   *
+   * @param params - sticker params
+   */
+  createSingleSticker(params: SingleStickerParams): Promise<string | undefined>
 }

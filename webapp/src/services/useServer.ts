@@ -2,6 +2,7 @@ import { nanoid } from 'nanoid';
 import { type Sticker } from '../types/sticker';
 
 export interface StickersetParams {
+  /** Author of the stickerset */
   userId: number;
 
   queryId: string;
@@ -12,8 +13,16 @@ export interface StickersetParams {
   /** Stickerset title */
   title: string;
 
+  /** Stickers data */
   stickers: Sticker[];
+}
 
+export interface SingleStickerParams {
+  /** Author of the sticker */
+  userId: number;
+
+  /** Sticker image data */
+  data: Blob;
 }
 
 /**
@@ -70,6 +79,28 @@ export function useServer(): UseServer {
   }
 
   /**
+   * Creates single sticker
+   * @param params - sticker image data
+   */
+  async function createSingleSticker(params: SingleStickerParams): Promise<string | undefined> {
+    const formData = new FormData();
+
+    formData.append('userId', params.userId.toString());
+    formData.append('sticker', params.data, nanoid());
+
+    try {
+      const result = await fetch(import.meta.env.VITE_API_URL + '/create-sticker', {
+        method: 'POST',
+        body: formData,
+      });
+
+      return (await result.json()).stickerId;
+    } catch (e) {
+      alert(e);
+    }
+  }
+
+  /**
    * Checks if stickerset with specified short name already exists
    * @param name - stickerset short name
    */
@@ -95,6 +126,7 @@ export function useServer(): UseServer {
   return {
     sendImageData,
     createStickerset,
+    createSingleSticker,
     checkStickersetName,
   };
 }
@@ -103,4 +135,5 @@ interface UseServer {
   sendImageData: (queryId: string, userId: number, blob: Blob) => Promise<void>;
   createStickerset: (params: StickersetParams) => Promise<void>;
   checkStickersetName: (name: string) => Promise<boolean>;
+  createSingleSticker: (params: SingleStickerParams) => Promise<string | undefined>;
 }

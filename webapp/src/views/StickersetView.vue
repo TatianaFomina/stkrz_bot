@@ -174,7 +174,7 @@ watch([stickersetName, stickersetTitle], () => {
 function addNewSticker(): void {
   impactOccurred('light');
 
-  router.push({ name: 'New Sticker', params: { back: 'true' } });
+  router.push({ name: 'New Sticker', query: { back: 'true' } });
 }
 
 function deleteSticker(sticker: Sticker): void {

@@ -12,6 +12,7 @@ declare global {
         sendData: (data: string) => void;
         setHeaderColor: (color: string) => void;
         enableClosingConfirmation: () => void;
+        switchInlineQuery: (query?: string) => Promise<void>;
         platform: Platform;
         initDataUnsafe: {
           query_id: string;
@@ -121,6 +122,14 @@ export function useTelegramWebApp(): UseTelegramWebApp {
    */
   const isMobileClient = computed(() => platform === 'ios' || platform === 'android');
 
+  /**
+   * A method that inserts the bot's username and the specified inline query in the current chat's input field.
+   * @param query - query to be inserted
+   */
+  async function switchInlineQuery(query?: string): Promise<void> {
+    await tgWebApp?.switchInlineQuery(query);
+  }
+
   return {
     queryId,
     userId,
@@ -132,6 +141,7 @@ export function useTelegramWebApp(): UseTelegramWebApp {
     impactOccurred,
     onViewportChange,
     getViewportHeight,
+    switchInlineQuery,
   };
 }
 
@@ -146,6 +156,7 @@ interface UseTelegramWebApp {
   impactOccurred: (style: HapticImpactStyle) => void;
   onViewportChange: (cb: () => void) => void;
   getViewportHeight: () => number | undefined;
+  switchInlineQuery: (query?: string) => Promise<void>;
 }
 
 let mainButtonCallbacks: Array<() => void> = [];

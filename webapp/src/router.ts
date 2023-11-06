@@ -6,10 +6,24 @@ import NewStickerView from './views/NewStickerView.vue';
 const routes = [
   { path: '/', component: StickersetView },
   {
-    path: '/new-sticker/:back?',
+    path: '/new-sticker',
     name: 'New Sticker',
     component: NewStickerView,
-    props: (route: RouteLocationNormalized) => ({ back: route.params.back === 'true' }),
+    props: (route: RouteLocationNormalized) => {
+      const props: any = {
+        back: route.query.back === 'true',
+      };
+
+      if (route.query.inline_query_id !== undefined) {
+        props.inlineModeData = {
+          queryId: route.query.inline_query_id,
+          queryText: route.query.inline_query_text,
+          userId: route.query.user_id,
+        };
+      }
+
+      return props;
+    },
   },
 ];
 

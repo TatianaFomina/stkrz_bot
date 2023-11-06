@@ -81,15 +81,20 @@ import { Tool } from '../components/toolbar/Tool';
 import TextSizeInput from '../components/TextSizeInput.vue';
 import StrokeSizeInput from '../components/StrokeSizeInput.vue';
 import ColorSelector from '../components/ColorSelector.vue';
+import { MiniAppMode } from '../types/MiniAppMode';
+import { useServer } from '../services/useServer';
 
 const {
   impactOccurred,
+  switchInlineQuery,
   isMobileClient,
 } = useTelegramWebApp();
 
 const {
   showMainButton,
   setMainButtonText,
+  showProgress,
+  hideProgress,
   addMainButtonClickHandler,
   removeMainButtonClickHandler,
 } = useTelegramWebAppMainButton();
@@ -102,6 +107,7 @@ const {
 } = useTelegramWebAppBackButton();
 
 const { addStickerData: addStickerToStore } = useStore();
+const { createSingleSticker } = useServer();
 const router = useRouter();
 
 const { t } = useLocale();
@@ -111,9 +117,18 @@ const props = defineProps<{
    * True if back button should be displayed
    */
    back?: boolean;
+
+   /**
+    * Some additional data if case app was opened in inline mode
+    */
+   inlineModeData?: {
+    queryId: number;
+    queryText: string;
+    userId: number;
+   };
 }>();
 
-const text = ref<string>(t('editor.start_text'));
+const text = ref<string>(props.inlineModeData?.queryText || t('editor.start_text'));
 const textSize = ref<number>(104);
 const strokeSize = ref<number>(24);
 const font = ref<Font>(Font.Airfool);
@@ -156,13 +171,35 @@ watch([textSize, font, strokeSize, textColor], () => {
   impactOccurred('light');
 });
 
+/**
+ * Mini app opening mode
+ */
+const mode = computed<MiniAppMode>(() => props.inlineModeData !== undefined ? MiniAppMode.INLINE : MiniAppMode.PM);
+
+/**
+ * Adds sticker to store and navigates to stickers list view in PM mode.
+ * Creates sticker and returns to inline query in case of inline mode.
+ */
 async function submit(): Promise<void> {
   if (imageData.value === null) {
     return;
   }
 
-  addStickerToStore(imageData.value);
-  router.push('/');
+  if (mode.value === MiniAppMode.PM) {
+    addStickerToStore(imageData.value);
+    router.push('/');
+  } else if (mode.value === MiniAppMode.INLINE && props.inlineModeData !== undefined) {
+    showProgress();
+
+    const stickerId = await createSingleSticker({
+      userId: props.inlineModeData?.userId,
+      data: imageData.value,
+    });
+
+    await switchInlineQuery('id:' + stickerId);
+
+    hideProgress();
+  }
 }
 
 function onBackClick(): void {

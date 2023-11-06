@@ -1,53 +1,49 @@
 import TelegramBot from 'node-telegram-bot-api';
 import { nanoid } from 'nanoid';
-import { MessengerBot, StickersetParams } from './types/messenger-bot';
+import { MessengerBot, SingleStickerParams, StickersetParams } from './types/messenger-bot';
 import { __, setLocale } from './i18n/index.js';
 
 /**
  * Telegram messenger bot
  */
 export class Bot implements MessengerBot {
+  /**
+   * Telegram bot instance
+   */
   private readonly telegramBot: TelegramBot;
+
+  /**
+   * URL where web app is hosted
+   */
+  private readonly webAppUrl = process.env.WEB_APP_URL || '';
+
+  /**
+   * Telegram API access token
+   */
+  private readonly token = process.env.TG_API_TOKEN || '';
+
+  /**
+   * True if bot is running in test environment
+   */
+  private readonly isTest = process.env.DEV === 'true';
 
   /**
    * Constructs the instance
    */
   constructor() {
-    const token = process.env.TG_API_TOKEN || '';
-    const webAppUrl = process.env.WEB_APP_URL || '';
-    const isProd = process.env.DEV === 'true';
-
     /* Create a bot that uses 'polling' to fetch new updates */
-    this.telegramBot = new TelegramBot(token, {
+    this.telegramBot = new TelegramBot(this.token, {
       polling: true,
       /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
       /* @ts-ignore */
-      testEnvironment: isProd,
+      testEnvironment: this.isTest,
     });
 
     /* Handle "/start" message */
-    this.telegramBot.onText(/\/start/, (msg) => {
-      const chatId = msg.chat.id;
-      const lang = msg.from?.language_code;
+    this.telegramBot.onText(/\/start/, this.handleTextMessage.bind(this));
 
-      if (lang !== undefined) {
-        setLocale(lang);
-      }
-
-      /* Send back the button to open web app */
-      this.telegramBot.sendMessage(chatId, __('prompt'), {
-        reply_markup: {
-          inline_keyboard: [
-            [ {
-              text: __('button_text'),
-              web_app: {
-                url: webAppUrl,
-              },
-            } ],
-          ],
-        },
-      });
-    });
+    /* Handle inline mode queries */
+    this.telegramBot.on('inline_query', this.handleInlineQuery.bind(this));
   }
 
   /**
@@ -102,6 +98,128 @@ export class Bot implements MessengerBot {
       return stickerset !== undefined;
     } catch (e) {
       return false;
+    }
+  }
+
+  /**
+   * Creates single sticker.
+   * Returns id of created sticker
+   *
+   * @param params - sticker params
+   */
+  public async createSingleSticker(params: SingleStickerParams): Promise<string | undefined> {
+    try {
+      const message = await this.telegramBot.sendSticker(params.userId, params.image);
+
+      await this.telegramBot.deleteMessage(message.chat.id, message.message_id);
+
+      return message.sticker?.file_id;
+    } catch (e) {
+      return undefined;
+    }
+  }
+
+
+  /**
+   * Handles telegram text message
+   *
+   * @param msg - message data
+   */
+  private handleTextMessage(msg: TelegramBot.Message): void {
+    const chatId = msg.chat.id;
+    const lang = msg.from?.language_code;
+
+    if (lang !== undefined) {
+      setLocale(lang);
+    }
+
+    /* Send back the button to open web app */
+    this.telegramBot.sendMessage(chatId, __('prompt'), {
+      reply_markup: {
+        inline_keyboard: [
+          [ {
+            text: __('button_text'),
+            web_app: {
+              url: this.webAppUrl,
+            },
+          } ],
+        ],
+      },
+    });
+  }
+
+  /**
+   * Handles telegram inline mode queries.
+   * If inline query contains sticker id, displays corresponding sticker in query results.
+   * Otherwise shows button to open web app.
+   *
+   * @param query - inline query data
+   */
+  private async handleInlineQuery(query: TelegramBot.InlineQuery): Promise<void> {
+    try {
+      if (query.query.startsWith('id:')) {
+        const stickerId = query.query.substring(3, query.query.length);
+
+        await this.showStickerInInlineQueryResults(query.id, stickerId);
+
+        return;
+      }
+
+      this.openWebappFromInlineQuery(query);
+    } catch (e) {
+      console.error('Error handling inline query', query);
+    }
+  }
+
+  /**
+   * Shows sticker with specified id in inline query results list
+   *
+   * @param queryId - query id
+   * @param stickerId - id of the sticker to show
+   */
+  private async showStickerInInlineQueryResults(queryId: string, stickerId: string): Promise<void> {
+    try {
+      await this.telegramBot.answerInlineQuery(queryId, [
+        {
+          id: nanoid(),
+          type: 'sticker',
+          sticker_file_id: stickerId,
+        },
+      ], {
+        is_personal: true,
+        cache_time: 0,
+      });
+    } catch (e) {
+      await this.telegramBot.answerInlineQuery(queryId, [], {});
+
+      console.error(e);
+    }
+  }
+
+  /**
+   * Displays button that allows to open web app
+   *
+   * @param query - inline query
+   */
+  private async openWebappFromInlineQuery(query: TelegramBot.InlineQuery): Promise<void> {
+    try {
+      const url = `${this.webAppUrl}?inline_query_id=${query.id}&inline_query_text=${encodeURIComponent(query.query)}&user_id=${query.from.id}`;
+
+      await this.telegramBot.answerInlineQuery(query.id, [], {
+        is_personal: true,
+        /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+        // @ts-ignore
+        button: JSON.stringify({
+          text: __('create_sticker'),
+          web_app: {
+            url,
+          },
+        }),
+      });
+    } catch (e) {
+      await this.telegramBot.answerInlineQuery(query.id, [], {});
+
+      console.error('Error sending open button to the chat, query:', query);
     }
   }
 }

@@ -66,8 +66,9 @@ export class Server {
    * Attaches request handlers
    */
   private attachHandlers(): void {
-    this.fastify.post('/create-stickerset', this.createStickerset);
-    this.fastify.post('/check-shortname', this.checkStickersetExists);
+    this.fastify.post('/create-stickerset', this.createStickerset.bind(this));
+    this.fastify.post('/create-sticker', this.createSingleSticker.bind(this));
+    this.fastify.post('/check-shortname', this.checkStickersetExists.bind(this));
   }
 
   /**
@@ -76,7 +77,7 @@ export class Server {
    * @param request - request data
    * @param reply - reply object
    */
-  private createStickerset = async (request: FastifyRequest, reply: FastifyReply): Promise<void> =>  {
+  private async createStickerset(request: FastifyRequest, reply: FastifyReply): Promise<void> {
     try {
       const body: any = request.body; // @todo remove any
 
@@ -116,7 +117,7 @@ export class Server {
 
       reply.code(500).send((e as Error).message);
     }
-  };
+  }
 
   /**
    * Handles request to check stickerset existance
@@ -124,7 +125,7 @@ export class Server {
    * @param request - request data
    * @param reply - response object
    */
-  private checkStickersetExists = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+  private async checkStickersetExists(request: FastifyRequest, reply: FastifyReply): Promise<void> {
     try {
       const name = (request.body as any).name.value;
       const exists = await this.bot.checkStickersetExists(name);
@@ -135,5 +136,35 @@ export class Server {
 
       reply.code(500).send((e as Error).message);
     }
-  };
+  }
+
+  /**
+   * Creates single sticker.
+   * Returns id of created sticker
+   *
+   * @param request - request data
+   * @param reply - response object
+   */
+  private async createSingleSticker(request: FastifyRequest, reply: FastifyReply): Promise<void> {
+    const body: any = request.body; // @todo remove any
+
+    try {
+      const stickerParams = {
+        userId: body.userId.value,
+        image: await body.sticker.toBuffer(),
+      };
+
+      const stickerId = await this.bot.createSingleSticker(stickerParams);
+
+      if (stickerId === undefined) {
+        throw new Error('Failed to upload sticker file');
+      }
+
+      reply.code(200).send({ stickerId });
+    } catch (e) {
+      console.error((e as Error).message);
+
+      reply.code(500).send((e as Error).message);
+    }
+  }
 }
