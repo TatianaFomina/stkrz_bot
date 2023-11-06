@@ -2844,6 +2844,11 @@ vue-tsc@^1.4.2:
     "@volar/vue-typescript" "1.6.4"
     semver "^7.3.8"
 
+vue3-yandex-metrika@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/vue3-yandex-metrika/-/vue3-yandex-metrika-0.0.4.tgz#dd48f4e051d313c3ff63639adea9066bf682fa11"
+  integrity sha512-nD1sIRc/o72TflN7avgEu2ozQ8znVCSBXBHpG0QU+zdjtnAD3kSSx6hm4WjieTZf/O+9oAZzQXEevsFjWVztfg==
+
 vue@^3.2.47:
   version "3.2.47"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.2.47.tgz#3eb736cbc606fc87038dbba6a154707c8a34cff0"
