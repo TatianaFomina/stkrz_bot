@@ -1,13 +1,12 @@
-# Telegram Stickers MiniApp
+# StickerWiz | Telegram Stickers Mini App
 
 
 ![MiniApp user interface](./assets/interface.png)
 
+
 <p align="center">
-  <a href="https://t.me/stkrz_bot" style="display: flex; align-items: center; width: min-content;">
-    <img src="./assets/telegram_logo.svg" width="16px" height="16px" style="margin-right: 6px; display: flex; align-items: center; width: min-content;"/>
-    stkrz_bot
-  </a> 
+  <a href="https://t.me/stkrz_bot"><img src="./assets/telegram_logo.svg" width="16px" height="16px" style="margin-right: 6px;"/>stkrz_bot</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+  🏆 <a href="https://t.me/contest/342"> Telegram Contest Winner</a>
 </p>
 
 ## About
@@ -15,6 +14,7 @@ A Telegram MiniApp that allows to create personalised sticker packs. Lets you ma
 
 From developer's perspective this repository might be usefull for those who develop any kind of content management MiniApps, to use as a template or a starting point. Here are the features of the app implementation:
 
+- Inline and PM modes support
 - Neat and tidy UI adapted for different clients (iOS and Android)
 - I18n support
 - Implemented using Vue.js
