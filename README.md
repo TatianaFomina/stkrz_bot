@@ -5,7 +5,7 @@
 
 
 <p align="center">
-  <a href="https://t.me/stkrz_bot"><img src="./assets/telegram_logo.svg" width="16px" height="16px" style="margin-right: 6px;"/>stkrz_bot</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="https://t.me/stkrz_bot"><img src="./assets/telegram_logo.svg" width="16px" height="16px"/>&nbsp;&nbsp;stkrz_bot</a>&nbsp;&nbsp;|&nbsp;&nbsp;
   🏆 <a href="https://t.me/contest/342"> Telegram Contest Winner</a>
 </p>
 
