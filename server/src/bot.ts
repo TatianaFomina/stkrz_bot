@@ -109,7 +109,7 @@ export class Bot implements MessengerBot {
    */
   public async createSingleSticker(params: SingleStickerParams): Promise<string | undefined> {
     try {
-      const message = await this.telegramBot.sendSticker(params.userId, params.image);
+      const message = await this.telegramBot.sendSticker(params.userId, params.image, { disable_notification: true });
 
       await this.telegramBot.deleteMessage(message.chat.id, message.message_id);
 
@@ -207,6 +207,7 @@ export class Bot implements MessengerBot {
 
       await this.telegramBot.answerInlineQuery(query.id, [], {
         is_personal: true,
+        cache_time: 0,
         /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
         // @ts-ignore
         button: JSON.stringify({
