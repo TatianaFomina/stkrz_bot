@@ -3,9 +3,15 @@ import { useRouter, type Router } from 'vue-router';
 interface YaMetrika {
   setUserID: (userId: string) => void;
   hit: (url: string, params: { referer: string }) => void;
+  reachGoal: (goalId: string) => void;
 }
 
 declare let Ya: { Metrika2: new (params: { id: string } & typeof CONFIG.options) => YaMetrika };
+
+/**
+ * Available Yandex Metrika goals
+ */
+type YaMetrikaGoals = 'generate-single-sticker-inline' | 'generate-single-sticker-pm' | 'generate-stickerpack-pm';
 
 const CONFIG = {
   options: {
@@ -32,6 +38,7 @@ const CONFIG = {
 export function useYaMetrika(): {
   init: () => Promise<void>;
   setUserId: (userId: string) => void;
+  reachGoal: (goalId: YaMetrikaGoals) => void;
 } {
   let yaMetrika: YaMetrika | undefined;
   const router = useRouter();
@@ -55,9 +62,18 @@ export function useYaMetrika(): {
     yaMetrika?.setUserID(userId);
   }
 
+  /**
+   * Loggs goal completion
+   * @param goalId - goal id
+   */
+  function reachGoal(goalId: YaMetrikaGoals): void {
+    yaMetrika?.reachGoal(goalId);
+  }
+
   return {
     init,
     setUserId,
+    reachGoal,
   };
 }
 

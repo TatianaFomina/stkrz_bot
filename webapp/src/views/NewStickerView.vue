@@ -110,7 +110,7 @@ const {
 const { addStickerData: addStickerToStore } = useStore();
 const { createSingleSticker } = useServer();
 const router = useRouter();
-const { setUserId } = useYaMetrika();
+const { setUserId, reachGoal } = useYaMetrika();
 
 const { t } = useLocale();
 
@@ -202,6 +202,9 @@ async function submit(): Promise<void> {
       userId: props.inlineModeData?.userId,
       data: imageData.value,
     });
+
+    const goal = mode.value === MiniAppMode.INLINE ? 'generate-single-sticker-inline' : 'generate-single-sticker-pm';
+    reachGoal(goal);
 
     await switchInlineQuery('id:' + stickerId);
 

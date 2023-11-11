@@ -3,7 +3,7 @@ import { type Sticker } from '../types/sticker';
 
 export interface StickersetParams {
   /** Author of the stickerset */
-  userId: number;
+  userId: string;
 
   queryId: string;
 

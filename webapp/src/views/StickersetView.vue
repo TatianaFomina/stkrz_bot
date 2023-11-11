@@ -94,6 +94,7 @@ import Cross from '../icons/Cross.vue';
 import EmptyPreview from '../components/EmptyPreview.vue';
 import { LottieAnimation } from 'lottie-web-vue';
 import DuckThinking from '../assets/animations/duck.json';
+import { useYaMetrika } from '../services/useYaMetrika';
 
 const {
   userId,
@@ -111,6 +112,8 @@ const {
   hideProgress,
   setMainButtonActive,
 } = useTelegramWebAppMainButton();
+
+const { reachGoal } = useYaMetrika();
 
 const router = useRouter();
 
@@ -212,6 +215,8 @@ async function submit(): Promise<void> {
       title: stickersetTitle.value,
       stickers: stickers.value,
     });
+
+    reachGoal('generate-stickerpack-pm');
 
     close();
   } finally {
