@@ -17,7 +17,7 @@ declare global {
         initDataUnsafe: {
           query_id: string;
           user: {
-            id: number;
+            id: string;
             language_code: string;
           };
         };
@@ -147,7 +147,7 @@ export function useTelegramWebApp(): UseTelegramWebApp {
 
 interface UseTelegramWebApp {
   queryId: string | undefined;
-  userId: number | undefined;
+  userId: string | undefined;
   language: string | undefined;
   platform: Platform | undefined;
   isMobileClient: Ref<boolean>;

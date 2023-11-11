@@ -83,6 +83,7 @@ import StrokeSizeInput from '../components/StrokeSizeInput.vue';
 import ColorSelector from '../components/ColorSelector.vue';
 import { MiniAppMode } from '../types/MiniAppMode';
 import { useServer } from '../services/useServer';
+import { useYaMetrika } from '../services/useYaMetrika';
 
 const {
   impactOccurred,
@@ -109,6 +110,7 @@ const {
 const { addStickerData: addStickerToStore } = useStore();
 const { createSingleSticker } = useServer();
 const router = useRouter();
+const { setUserId } = useYaMetrika();
 
 const { t } = useLocale();
 
@@ -124,7 +126,7 @@ const props = defineProps<{
    inlineModeData?: {
     queryId: number;
     queryText: string;
-    userId: number;
+    userId: string;
    };
 }>();
 
@@ -155,7 +157,12 @@ onMounted(async () => {
     showBackButton();
     addBackButtonClickHandler(onBackClick);
   }
+
   showMainButton();
+
+  if (mode.value === MiniAppMode.INLINE && props.inlineModeData?.userId !== undefined) {
+    setUserId(props.inlineModeData?.userId);
+  }
 });
 
 onUnmounted(() => {

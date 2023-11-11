@@ -8,12 +8,14 @@
 import { onMounted } from 'vue';
 
 import { useTelegramWebApp } from './services/useTelegramWebApp';
+import { useYaMetrika } from './services/useYaMetrika';
 import { useLocale } from './services/useLocale';
 
-const { ready, language, platform } = useTelegramWebApp();
+const { ready, language, platform, userId } = useTelegramWebApp();
+const { init: initYaMetrika, setUserId } = useYaMetrika();
 const { setLocale } = useLocale();
 
-onMounted(() => {
+onMounted(async () => {
   ready();
 
   if (platform !== undefined) {
@@ -22,6 +24,12 @@ onMounted(() => {
 
   if (language !== undefined) {
     setLocale(language);
+  }
+
+  await initYaMetrika();
+
+  if (userId !== undefined) {
+    setUserId(userId);
   }
 });
 </script>

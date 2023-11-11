@@ -19,7 +19,7 @@ export interface StickersetParams {
 
 export interface SingleStickerParams {
   /** Author of the sticker */
-  userId: number;
+  userId: string;
 
   /** Sticker image data */
   data: Blob;
