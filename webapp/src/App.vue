@@ -12,10 +12,10 @@ import { useYaMetrika } from './services/useYaMetrika';
 import { useLocale } from './services/useLocale';
 
 const { ready, language, platform, userId } = useTelegramWebApp();
-const { init: initYaMetrika, setUserId } = useYaMetrika();
+const { setUserId } = useYaMetrika();
 const { setLocale } = useLocale();
 
-onMounted(async () => {
+onMounted(() => {
   ready();
 
   if (platform !== undefined) {
@@ -25,8 +25,6 @@ onMounted(async () => {
   if (language !== undefined) {
     setLocale(language);
   }
-
-  await initYaMetrika();
 
   if (userId !== undefined) {
     setUserId(userId);
