@@ -1,4 +1,5 @@
 import { useRouter, type Router } from 'vue-router';
+import { createSharedComposable } from '@vueuse/core';
 
 interface YaMetrika {
   setUserID: (userId: string) => void;
@@ -36,11 +37,11 @@ const CONFIG = {
   skipSamePath: true,
 };
 
-export function useYaMetrika(): {
+export const useYaMetrika = createSharedComposable((): {
   init: () => Promise<void>;
   setUserId: (userId: string) => void;
   reachGoal: (goalId: YaMetrikaGoals) => void;
-} {
+} => {
   let yaMetrika: YaMetrika | undefined;
   const router = useRouter();
 
@@ -76,7 +77,7 @@ export function useYaMetrika(): {
     setUserId,
     reachGoal,
   };
-}
+});
 
 /**
  * Loads Yandex Metrika script
