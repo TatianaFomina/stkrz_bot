@@ -2,6 +2,7 @@ import { useRouter, type Router } from 'vue-router';
 
 interface YaMetrika {
   setUserID: (userId: string) => void;
+  userParams: (params: Record<string, string>) => void;
   hit: (url: string, params: { referer: string }) => void;
   reachGoal: (goalId: string) => void;
 }
@@ -59,7 +60,7 @@ export function useYaMetrika(): {
    * @param userId - id of the user
    */
   function setUserId(userId: string): void {
-    yaMetrika?.setUserID(userId);
+    yaMetrika?.userParams({ UserID: userId });
   }
 
   /**
