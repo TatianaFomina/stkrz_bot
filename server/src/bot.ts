@@ -135,6 +135,8 @@ export class Bot implements MessengerBot {
 
     /* Send back the button to open web app */
     this.telegramBot.sendMessage(chatId, __('prompt'), {
+      parse_mode: 'MarkdownV2',
+      disable_web_page_preview: true,
       reply_markup: {
         inline_keyboard: [
           [ {
