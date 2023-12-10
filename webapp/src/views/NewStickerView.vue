@@ -124,7 +124,7 @@ const props = defineProps<{
     * Some additional data if case app was opened in inline mode
     */
    inlineModeData?: {
-    queryId: number;
+    queryId: string;
     queryText: string;
     userId: string;
    };
@@ -200,13 +200,16 @@ async function submit(): Promise<void> {
 
     const stickerId = await createSingleSticker({
       userId: props.inlineModeData?.userId,
+      queryId: props.inlineModeData?.queryId,
       data: imageData.value,
     });
 
-    const goal = mode.value === MiniAppMode.INLINE ? 'generate-single-sticker-inline' : 'generate-single-sticker-pm';
-    reachGoal(goal);
+    if (stickerId !== undefined) {
+      const goal = mode.value === MiniAppMode.INLINE ? 'generate-single-sticker-inline' : 'generate-single-sticker-pm';
+      reachGoal(goal);
 
-    await switchInlineQuery('id:' + stickerId);
+      await switchInlineQuery('id:' + stickerId);
+    }
 
     hideProgress();
   }

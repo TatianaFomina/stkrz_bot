@@ -1,10 +1,12 @@
 import { nanoid } from 'nanoid';
 import { type Sticker } from '../types/sticker';
-
+import { useTelegramWebApp } from './useTelegramWebApp';
+import { ERROR_MESSAGE_FORBIDDEN, ERROR_QUERY } from '../../../common/const';
 export interface StickersetParams {
   /** Author of the stickerset */
   userId: string;
 
+  /** Web app query id */
   queryId: string;
 
   /** Stickerset name */
@@ -23,6 +25,9 @@ export interface SingleStickerParams {
 
   /** Sticker image data */
   data: Blob;
+
+  /** Inline query id */
+  queryId: string;
 }
 
 /**
@@ -86,6 +91,7 @@ export function useServer(): UseServer {
     const formData = new FormData();
 
     formData.append('userId', params.userId.toString());
+    formData.append('queryId', params.queryId.toString());
     formData.append('sticker', params.data, nanoid());
 
     try {
@@ -94,8 +100,26 @@ export function useServer(): UseServer {
         body: formData,
       });
 
-      return (await result.json()).stickerId;
+      const body = await result.json();
+
+      if ([500, 403].includes(result.status)) {
+        throw new Error(body.error);
+      }
+
+      return body.stickerId;
     } catch (e) {
+      const error = e as Error;
+
+      if (error.message === ERROR_MESSAGE_FORBIDDEN) {
+        const {
+          switchInlineQuery,
+        } = useTelegramWebApp();
+
+        /* Close the app with invisible error sign */
+        await switchInlineQuery(ERROR_QUERY);
+
+        return;
+      }
       alert(e);
     }
   }

@@ -6,6 +6,7 @@ import fastify from 'fastify';
 import { FastifyRequest } from 'fastify/types/request';
 import { FastifyReply } from 'fastify';
 import { MessengerBot, StickersetParams } from './types/messenger-bot';
+import { ERROR_MESSAGE_FORBIDDEN } from '../../common/const.js';
 
 
 /**
@@ -157,14 +158,20 @@ export class Server {
       const stickerId = await this.bot.createSingleSticker(stickerParams);
 
       if (stickerId === undefined) {
-        throw new Error('Failed to upload sticker file');
+        throw new Error('Failed to create sticker');
       }
 
       reply.code(200).send({ stickerId });
     } catch (e) {
-      console.error((e as Error).message);
+      const error = e as Error;
 
-      reply.code(500).send((e as Error).message);
+      console.error(error);
+
+      if (error.message === ERROR_MESSAGE_FORBIDDEN) {
+        return reply.code(403).send({ error: error.message });
+      }
+
+      reply.code(500).send({ error: (e as Error).message });
     }
   }
 }

@@ -2,6 +2,7 @@ import TelegramBot from 'node-telegram-bot-api';
 import { nanoid } from 'nanoid';
 import { MessengerBot, SingleStickerParams, StickersetParams } from './types/messenger-bot';
 import { __, setLocale } from './i18n/index.js';
+import { ERROR_MESSAGE_FORBIDDEN, ERROR_QUERY } from '../../common/const.js';
 
 /**
  * Telegram messenger bot
@@ -115,8 +116,32 @@ export class Bot implements MessengerBot {
 
       return message.sticker?.file_id;
     } catch (e) {
+      const errorCode = (e as any).response.body.error_code;
+
+      if (errorCode === 403) {
+        throw new Error(ERROR_MESSAGE_FORBIDDEN);
+      }
+
       return undefined;
     }
+  }
+
+  /**
+   * Displays inline button that suggests to enable the bot
+   *
+   * @param queryId - query id
+   */
+  private async suggestToEnableBot(queryId: string): Promise<void> {
+    await this.telegramBot.answerInlineQuery(queryId, [], {
+      is_personal: true,
+      cache_time: 0,
+      /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+      // @ts-ignore
+      button: JSON.stringify({
+        text: __('enable_bot_message'),
+        start_parameter: 'start',
+      }),
+    });
   }
 
 
@@ -159,6 +184,14 @@ export class Bot implements MessengerBot {
    */
   private async handleInlineQuery(query: TelegramBot.InlineQuery): Promise<void> {
     try {
+      /* Check for not started bot error */
+      if (query.query === ERROR_QUERY) {
+        await this.suggestToEnableBot(query.id);
+
+        return;
+      }
+
+      /* Check for sticker file id */
       if (query.query.startsWith('id:')) {
         const stickerId = query.query.substring(3, query.query.length);
 
